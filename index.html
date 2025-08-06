@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture - DREAM2BUILT1</title>
+    <!-- Styles CSS pour la mise en page de la facture -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .invoice-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
+            padding: 30px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .header .logo-container {
+            flex: 1;
+            min-width: 150px;
+        }
+        .header img {
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .header .company-info {
+            flex: 2;
+            text-align: right;
+            min-width: 250px;
+        }
+        .header .company-info h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #2c3e50;
+        }
+        .header .company-info p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        /* Style pour les champs de saisie */
+        .invoice-details, .client-info, .payment-terms {
+            margin-bottom: 25px;
+            line-height: 1.8;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .invoice-details div, .client-info div {
+            margin-bottom: 8px;
+        }
+        .invoice-details span, .client-info span {
+            font-weight: bold;
+            color: #34495e;
+        }
+        /* Style pour les champs de saisie */
+        .invoice-details input[type="text"],
+        .invoice-details input[type="date"],
+        .client-info input[type="text"],
+        .total-summary input[type="number"],
+        .company-info input[type="text"],
+        .payment-terms textarea {
+            border: 1px solid #ccc;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-family: inherit;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .company-info input[type="text"] {
+            text-align: right;
+            margin: 2px 0;
+        }
+        #companyName {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: transparent;
+            border: none;
+            text-align: right;
+            width: auto;
+            padding: 0;
+        }
+        .payment-terms input[type="text"] {
+            border: 1px solid #ccc;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-family: inherit;
+            width: auto;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        .table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        thead th {
+            background-color: #3498db;
+            color: white;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tbody tr:hover {
+            background-color: #e8f4f8;
+        }
+        .table-actions {
+            text-align: right;
+            margin-top: 10px;
+        }
+        .table-actions button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        .table-actions button:hover {
+            background-color: #27ae60;
+        }
+        .total-summary {
+            text-align: right;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px solid #34495e;
+        }
+        .total-summary div {
+            padding: 8px 0;
+            font-size: 1.1em;
+        }
+        .total-summary .total {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .payment-terms {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .payment-terms h3 {
+            color: #34495e;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .payment-terms p {
+            margin: 5px 0;
+        }
+        .payment-terms ul {
+            list-style: none;
+            padding: 0;
+        }
+        .payment-terms ul li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .actions button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .actions button:hover {
+            background-color: #2980b9;
+        }
+        .remove-row-btn {
+            background-color: #e74c3c;
+        }
+        .remove-row-btn:hover {
+            background-color: #c0392b;
+        }
+        /* Styles responsifs pour les petits écrans */
+        @media (max-width: 600px) {
+            .invoice-container {
+                padding: 15px;
+                margin: 10px;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header .company-info {
+                text-align: center;
+                margin-top: 15px;
+            }
+            .header img {
+                margin-bottom: 10px;
+            }
+            th, td {
+                padding: 10px;
+            }
+            .total-summary {
+                text-align: center;
+            }
+            .actions {
+                justify-content: center;
+            }
+            .actions button {
+                margin: 5px;
+            }
+        }
+        /* Masquer les boutons lors de l'impression */
+        @media print {
+            .actions, .table-actions {
+                display: none;
+            }
+            input {
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-container">
+    <div class="actions">
+        <button onclick="generateNewInvoice()">Générer une nouvelle facture</button>
+        <button onclick="window.print()">Imprimer la facture</button>
+    </div>
+
+    <div class="header">
+        <div class="logo-container">
+            <!-- Utilisation d'une image pour le logo de DREAM2BUILT1 -->
+            <img src="https://i.postimg.cc/pX3JKSff/DREAM2B1.png" alt="DREAM2BUILT1 Logo">
+        </div>
+        <div class="company-info">
+            <input type="text" id="companyName" value="DREAM2BUILT1">
+            <input type="text" id="companySlogan" value="Slogan: Invest to Win More">
+            <input type="text" id="companyAddress" value="123 Rue de l'Innovation">
+            <input type="text" id="companyCity" value="Port-au-Prince, HT 6110, Haïti">
+            <input type="text" id="companyPhone" value="+509 1234 5678">
+            <input type="text" id="companyEmail" value="contact@dream2built1.com">
+            <input type="text" id="companyWebsite" value="www.dream2built1.com">
+        </div>
+    </div>
+
+    <div class="invoice-details">
+        <div>
+            <span>FACTURE N° :</span>
+            <input type="text" id="invoiceNumber" value="INV-2025-08-06-0001">
+        </div>
+        <div>
+            <span>Date de facturation :</span>
+            <input type="date" id="invoiceDate" value="2025-08-06">
+        </div>
+        <div>
+            <span>Date d'échéance :</span>
+            <input type="date" id="dueDate" value="2025-08-20">
+        </div>
+    </div>
+
+    <div class="client-info">
+        <h3>Facture à :</h3>
+        <div><input type="text" value="Nom du Client"></div>
+        <div><input type="text" value="Nom de l'Entreprise du Client"></div>
+        <div><input type="text" value="123 Avenue du Progrès"></div>
+        <div><input type="text" value="Pétion-Ville, HT 6120, Haïti"></div>
+        <div><input type="text" value="+509 9876 5432"></div>
+        <div><input type="text" value="client@email.com"></div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire (Gdes)</th>
+                    <th>Taxe (%)</th>
+                    <th>Montant total (Gdes)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="invoiceTableBody">
+                <!-- Les lignes de la table seront ajoutées ici par JavaScript -->
+            </tbody>
+        </table>
+        <div class="table-actions">
+            <button onclick="addRow()">Ajouter une ligne</button>
+        </div>
+    </div>
+
+    <div class="total-summary">
+        <div><span>Sous-total :</span> <span id="subtotal">0.00</span> Gdes</div>
+        <div><span>Taxe Totale (Gdes) :</span> <span id="totalTax">0.00</span> Gdes</div>
+        <div><span>Montant reçu :</span> <input type="number" id="amountReceived" value="0" min="0" step="0.01"> Gdes</div>
+        <div class="total"><span>Reste à payer :</span> <span id="totalDue">0.00</span> Gdes</div>
+    </div>
+
+    <div class="payment-terms">
+        <h3>Conditions de paiement</h3>
+        <p>
+            Veuillez effectuer le paiement au plus tard le <input type="text" id="dynamicDueDateText" value="20/08/2025" style="width: 100px; text-align: center;">.
+        </p>
+        <textarea id="paymentMethods" rows="4">
+Méthodes de paiement acceptées :
+- Virement bancaire (Compte #1234567890, Banque Nationale de Crédit)
+- Paiement mobile (Moncash: +509 1234 5678, Natcash: +509 9876 5432)</textarea>
+    </div>
+
+    <div class="footer">
+        <p>Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la construction de vos rêves.</p>
+    </div>
+</div>
+
+<script>
+    // Fonction pour obtenir la date actuelle au format YYYY-MM-DD
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Fonction pour générer un numéro de facture unique
+    function generateInvoiceNumber() {
+        const date = getCurrentDate();
+        const randomNum = Math.floor(1000 + Math.random() * 9000); // Nombre aléatoire à 4 chiffres
+        return `INV-${date}-${randomNum}`;
+    }
+
+    // Fonction pour ajouter une ligne au tableau
+    function addRow(description = '', quantity = 1, price = 0, tax = 0) {
+        const tableBody = document.getElementById('invoiceTableBody');
+        const newRow = document.createElement('tr');
+        
+        newRow.innerHTML = `
+            <td><input type="text" value="${description}"></td>
+            <td><input type="number" class="quantity" value="${quantity}" min="0"></td>
+            <td><input type="number" class="price" value="${price}" min="0" step="0.01"></td>
+            <td><input type="number" class="tax-rate" value="${tax}" min="0" step="0.01"></td>
+            <td><span class="total-amount">${((quantity * price) * (1 + tax / 100)).toFixed(2)}</span></td>
+            <td><button class="remove-row-btn" onclick="removeRow(this)">Supprimer</button></td>
+        `;
+
+        tableBody.appendChild(newRow);
+
+        // Ajout des écouteurs d'événements aux nouvelles entrées
+        const inputs = newRow.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', calculateTotals);
+        });
+
+        // Mise à jour des totaux après l'ajout de la ligne
+        calculateTotals();
+    }
+
+    // Fonction pour supprimer une ligne
+    function removeRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        calculateTotals();
+    }
+
+    // Fonction pour calculer les totaux
+    function calculateTotals() {
+        const rows = document.querySelectorAll('#invoiceTableBody tr');
+        let subtotal = 0;
+        let totalTax = 0;
+
+        rows.forEach(row => {
+            const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+            const price = parseFloat(row.querySelector('.price').value) || 0;
+            const taxRate = parseFloat(row.querySelector('.tax-rate').value) || 0;
+            
+            const lineTotal = quantity * price;
+            const lineTax = lineTotal * (taxRate / 100);
+            const lineGrandTotal = lineTotal + lineTax;
+
+            row.querySelector('.total-amount').textContent = lineGrandTotal.toFixed(2);
+            subtotal += lineTotal;
+            totalTax += lineTax;
+        });
+
+        const totalWithTax = subtotal + totalTax;
+        const amountReceived = parseFloat(document.getElementById('amountReceived').value) || 0;
+        
+        const remainingDue = totalWithTax - amountReceived;
+        
+        document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+        document.getElementById('totalTax').textContent = totalTax.toFixed(2);
+        document.getElementById('totalDue').textContent = remainingDue.toFixed(2);
+
+        // Si le montant dû est 0 ou moins, on peut le mettre en évidence
+        if (remainingDue <= 0) {
+            document.getElementById('totalDue').style.color = '#27ae60'; // Vert
+        } else {
+            document.getElementById('totalDue').style.color = '#e74c3c'; // Rouge
+        }
+    }
+
+    // Fonction pour mettre à jour la date d'échéance dans le texte
+    function updateDueDateText() {
+        const dueDateInput = document.getElementById('dueDate');
+        const dynamicDueDateTextInput = document.getElementById('dynamicDueDateText');
+        if (dueDateInput && dynamicDueDateTextInput) {
+            const date = new Date(dueDateInput.value);
+            const formattedDate = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            dynamicDueDateTextInput.value = formattedDate;
+        }
+    }
+
+    // Fonction pour générer une nouvelle facture (bouton "Générer")
+    function generateNewInvoice() {
+        const invoiceNumberInput = document.getElementById('invoiceNumber');
+        const invoiceDateInput = document.getElementById('invoiceDate');
+        const dueDateInput = document.getElementById('dueDate');
+        const tableBody = document.getElementById('invoiceTableBody');
+        const paymentMethodsTextarea = document.getElementById('paymentMethods');
+
+        // Met à jour le numéro de facture
+        invoiceNumberInput.value = generateInvoiceNumber();
+
+        // Met à jour la date de facturation à la date du jour
+        const currentDate = getCurrentDate();
+        invoiceDateInput.value = currentDate;
+        
+        // Met à jour la date d'échéance à 14 jours de la date du jour
+        const dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 14);
+        const dueYear = dueDate.getFullYear();
+        const dueMonth = String(dueDate.getMonth() + 1).padStart(2, '0');
+        const dueDay = String(dueDate.getDate()).padStart(2, '0');
+        dueDateInput.value = `${dueYear}-${dueMonth}-${dueDay}`;
+        updateDueDateText();
+
+        // Réinitialiser le tableau
+        tableBody.innerHTML = '';
+        
+        // Ajouter les lignes initiales avec les valeurs par défaut
+        addRow('Frais d\'inscription pour la formation "Dream2Built1"', 1, 100.00, 0);
+        addRow('Pack de ressources "Invest to Win More"', 1, 50.00, 0);
+        addRow('Frais de relance (Applicable après 10 premières personnes)', 1, 100.00, 0);
+        addRow('Frais de participation annuelle (après 6 mois)', 1, 500.00, 0);
+
+        // Réinitialiser le montant reçu
+        document.getElementById('amountReceived').value = 0;
+
+        // Réinitialiser le contenu du champ de texte
+        paymentMethodsTextarea.value = `
+Méthodes de paiement acceptées :
+- Virement bancaire (Compte #1234567890, Banque Nationale de Crédit)
+- Paiement mobile (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`.trim();
+        
+        // Réinitialiser les champs de l'entreprise
+        document.getElementById('companyName').value = 'DREAM2BUILT1';
+        document.getElementById('companySlogan').value = 'Slogan: Invest to Win More';
+        document.getElementById('companyAddress').value = '123 Rue de l\'Innovation';
+        document.getElementById('companyCity').value = 'Port-au-Prince, HT 6110, Haïti';
+        document.getElementById('companyPhone').value = '+509 1234 5678';
+        document.getElementById('companyEmail').value = 'contact@dream2built1.com';
+        document.getElementById('companyWebsite').value = 'www.dream2built1.com';
+
+
+        // Calculer les totaux initiaux
+        calculateTotals();
+    }
+
+    // Appel de la fonction pour générer une nouvelle facture au chargement de la page
+    document.addEventListener('DOMContentLoaded', generateNewInvoice);
+
+    // Ajout d'un écouteur d'événement au champ "Montant reçu" pour recalculer les totaux
+    document.getElementById('amountReceived').addEventListener('input', calculateTotals);
+    // Ajout d'un écouteur d'événement à la date d'échéance pour mettre à jour le texte
+    document.getElementById('dueDate').addEventListener('change', updateDueDateText);
+</script>
+
+</body>
+</html>
