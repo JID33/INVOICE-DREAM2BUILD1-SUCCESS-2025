@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - DREAM2BUILT1</title>
+    <title>Facture - DREAM2BUILT1</title>
     <!-- Styles CSS pour la mise en page de la facture -->
     <style>
         body {
@@ -268,7 +268,7 @@
             background-color: #2980b9;
         }
         .remove-row-btn {
-            background-color: #e74c3c;
+            background-color: #e74c4c;
         }
         .remove-row-btn:hover {
             background-color: #c0392b;
@@ -299,6 +299,9 @@
             border: 1px solid #ccc;
             padding: 5px 8px;
             border-radius: 4px;
+        }
+        .total-amount-row {
+            text-align: right;
         }
         /* Styles responsifs pour les petits écrans */
         @media (max-width: 600px) {
@@ -369,21 +372,21 @@
         <button onclick="setLanguage('es')">Español</button>
     </div>
     <div class="actions">
-        <!-- New button to save the invoice as an HTML file -->
-        <button onclick="saveInvoice()">Save Invoice</button>
-        <button onclick="generateNewInvoice()">Generate New Invoice</button>
-        <button onclick="window.print()">Print Invoice</button>
+        <!-- Nouveau bouton pour sauvegarder la facture en tant que fichier HTML -->
+        <button onclick="saveInvoice()">Sauvegarder la facture</button>
+        <button onclick="generateNewInvoice()">Générer une nouvelle facture</button>
+        <button onclick="window.print()">Imprimer la facture</button>
     </div>
 
     <div class="header">
         <div class="logo-container">
-            <!-- Logo upload area -->
+            <!-- Zone de téléchargement de logo -->
             <label for="logoInput" class="logo-upload empty">
-                <img id="logoImage" src="" alt="Company Logo">
-                <span class="upload-text">Click to add a logo</span>
+                <img id="logoImage" src="" alt="Logo de l'entreprise">
+                <span class="upload-text">Cliquer pour ajouter un logo</span>
             </label>
             <input type="file" id="logoInput" accept="image/*" style="display: none;">
-            <button id="removeLogoButton" class="remove-logo-btn" onclick="removeLogo()">Remove Logo</button>
+            <button id="removeLogoButton" class="remove-logo-btn" onclick="removeLogo()">Supprimer le logo</button>
         </div>
         <div class="company-info">
             <input type="text" id="companyName" value="DREAM2BUILT1">
@@ -398,23 +401,23 @@
 
     <div class="invoice-details">
         <div>
-            <span data-lang="invoice-number">INVOICE N° :</span>
+            <span data-lang="invoice-number">FACTURE N° :</span>
             <input type="text" id="invoiceNumber" value="INV-2025-08-06-0001">
         </div>
         <div>
-            <span data-lang="invoice-date">Invoice Date :</span>
+            <span data-lang="invoice-date">Date de facturation :</span>
             <input type="date" id="invoiceDate" value="2025-08-06">
         </div>
         <div>
-            <span data-lang="due-date">Due Date :</span>
+            <span data-lang="due-date">Date d'échéance :</span>
             <input type="date" id="dueDate" value="2025-08-20">
         </div>
     </div>
 
     <div class="client-info">
-        <h3 data-lang="bill-to">Bill to :</h3>
-        <input type="text" id="clientName" value="Client Name">
-        <input type="text" id="clientCompany" value="Client Company Name">
+        <h3 data-lang="bill-to">Facture à :</h3>
+        <input type="text" id="clientName" value="Nom du Client">
+        <input type="text" id="clientCompany" value="Nom de l'Entreprise du Client">
         <input type="text" id="clientAddress" value="123 Avenue du Progrès">
         <input type="text" id="clientCity" value="Pétion-Ville, HT 6120, Haïti">
         <input type="text" id="clientPhone" value="+509 9876 5432">
@@ -426,10 +429,8 @@
             <thead>
                 <tr>
                     <th data-lang="description">Description</th>
-                    <th data-lang="quantity">Quantity</th>
-                    <th data-lang="unit-price">Unit Price</th>
-                    <th data-lang="tax-rate">Tax (%)</th>
-                    <th data-lang="total-amount">Total Amount</th>
+                    <th data-lang="quantity">Quantité</th>
+                    <th data-lang="unit-price">Prix unitaire</th>
                     <th data-lang="actions">Actions</th>
                 </tr>
             </thead>
@@ -438,37 +439,38 @@
             </tbody>
         </table>
         <div class="table-actions">
-            <button onclick="addRow()" data-lang="add-row-button">Add Row</button>
+            <button onclick="addRow()" data-lang="add-row-button">Ajouter une ligne</button>
         </div>
     </div>
 
     <div class="total-summary">
-        <div><span data-lang="currency-symbol-label">Currency Symbol:</span> <input type="text" class="currency-input" id="currencySymbolInput" value="$"></div>
-        <div><span data-lang="subtotal">Subtotal :</span> <span id="subtotal">0.00</span> <span class="currencySymbol"></span></div>
-        <div><span data-lang="total-tax">Total Tax :</span> <span id="totalTax">0.00</span> <span class="currencySymbol"></span></div>
-        <!-- Ligne modifiée pour inverser l'ordre -->
-        <div><span data-lang="amount-received">Amount Received :</span> <input type="number" id="amountReceived" value="0" min="0" step="0.01" style="width: 100px; text-align: center;"> <span class="currencySymbol"></span></div>
-        <div class="total"><span data-lang="balance-due">Balance Due :</span> <span id="totalDue">0.00</span> <span class="currencySymbol"></span></div>
+        <div><span data-lang="currency-symbol-label">Symbole de la devise :</span> <input type="text" class="currency-input" id="currencySymbolInput" value="$"></div>
+        <div><span data-lang="subtotal">Sous-total :</span> <span id="subtotal">0.00</span> <span class="currencySymbol"></span></div>
+        <div><span data-lang="global-tax-rate">Taux de taxe global (%) :</span> <input type="number" id="globalTaxRate" value="0" min="0" step="0.01" style="width: 100px; text-align: center;"></div>
+        <div><span data-lang="total-tax">Taxe Totale :</span> <span id="totalTax">0.00</span> <span class="currencySymbol"></span></div>
+        <div class="total"><span data-lang="grand-total">Montant total :</span> <span id="grandTotal">0.00</span> <span class="currencySymbol"></span></div>
+        <div><span data-lang="amount-received">Montant reçu :</span> <input type="number" id="amountReceived" value="0" min="0" step="0.01" style="width: 100px; text-align: center;"> <span class="currencySymbol"></span></div>
+        <div class="total"><span data-lang="balance-due">Reste à payer :</span> <span id="totalDue">0.00</span> <span class="currencySymbol"></span></div>
     </div>
 
     <div class="payment-terms">
-        <h3 data-lang="payment-terms-title">Payment Terms</h3>
+        <h3 data-lang="payment-terms-title">Conditions de paiement</h3>
         <p>
-            <span data-lang="payment-due-date-text">Please make the payment by</span> <input type="text" id="dynamicDueDateText" value="20/08/2025" style="width: 100px; text-align: center;">.
+            <span data-lang="payment-due-date-text">Veuillez effectuer le paiement au plus tard le</span> <input type="text" id="dynamicDueDateText" value="20/08/2025" style="width: 100px; text-align: center;">.
         </p>
         <textarea id="paymentMethods" rows="4">
-Accepted payment methods:
-- Bank transfer (Account #1234567890, Bank National Credit)
-- Mobile payment (Moncash: +509 1234 5678, Natcash: +509 9876 5432)</textarea>
+Méthodes de paiement acceptées :
+- Virement bancaire (Compte #1234567890, Banque Nationale de Crédit)
+- Paiement mobile (Moncash: +509 1234 5678, Natcash: +509 9876 5432)</textarea>
     </div>
 
     <div class="footer">
-        <p data-lang="footer-text">Thank you for your trust! We look forward to helping you build your dreams.</p>
+        <p data-lang="footer-text">Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la construction de vos rêves.</p>
     </div>
 </div>
 
 <script>
-    // Translations object
+    // Objet de traduction
     const translations = {
         'en': {
             'title': 'Invoice - DREAM2BUILT1',
@@ -484,13 +486,13 @@ Accepted payment methods:
             'description': 'Description',
             'quantity': 'Quantity',
             'unit-price': 'Unit Price',
-            'tax-rate': 'Tax (%)',
-            'total-amount': 'Total Amount',
             'actions': 'Actions',
             'add-row-button': 'Add Row',
             'currency-symbol-label': 'Currency Symbol:',
             'subtotal': 'Subtotal :',
+            'global-tax-rate': 'Global Tax Rate (%) :',
             'total-tax': 'Total Tax :',
+            'grand-total': 'Grand Total :',
             'amount-received': 'Amount Received :',
             'balance-due': 'Balance Due :',
             'payment-terms-title': 'Payment Terms',
@@ -500,10 +502,10 @@ Accepted payment methods:
 - Mobile payment (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
             'footer-text': 'Thank you for your trust! We look forward to helping you build your dreams.',
             'default-items': [
-                { desc: 'Registration fees for "Dream2Built1" training', qty: 1, price: 100.00, tax: 0 },
-                { desc: '"Invest to Win More" resource pack', qty: 1, price: 50.00, tax: 0 },
-                { desc: 'Revival fee (Applicable after the first 10 people)', qty: 1, price: 100.00, tax: 0 },
-                { desc: 'Annual participation fee (after 6 months)', qty: 1, price: 500.00, tax: 0 }
+                { desc: 'Registration fees for "Dream2Built1" training', qty: 1, price: 100.00 },
+                { desc: '"Invest to Win More" resource pack', qty: 1, price: 50.00 },
+                { desc: 'Revival fee (Applicable after the first 10 people)', qty: 1, price: 100.00 },
+                { desc: 'Annual participation fee (after 6 months)', qty: 1, price: 500.00 }
             ],
             'client-name': 'Client Name',
             'client-company': 'Client Company Name',
@@ -522,13 +524,13 @@ Accepted payment methods:
             'description': 'Description',
             'quantity': 'Quantité',
             'unit-price': 'Prix unitaire',
-            'tax-rate': 'Taxe (%)',
-            'total-amount': 'Montant total',
             'actions': 'Actions',
             'add-row-button': 'Ajouter une ligne',
             'currency-symbol-label': 'Symbole de la devise :',
             'subtotal': 'Sous-total :',
+            'global-tax-rate': 'Taux de taxe global (%) :',
             'total-tax': 'Taxe Totale :',
+            'grand-total': 'Montant total :',
             'amount-received': 'Montant reçu :',
             'balance-due': 'Reste à payer :',
             'payment-terms-title': 'Conditions de paiement',
@@ -538,10 +540,10 @@ Accepted payment methods:
 - Paiement mobile (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
             'footer-text': 'Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la construction de vos rêves.',
             'default-items': [
-                { desc: 'Frais d\'inscription pour la formation "Dream2Built1"', qty: 1, price: 100.00, tax: 0 },
-                { desc: 'Pack de ressources "Invest to Win More"', qty: 1, price: 50.00, tax: 0 },
-                { desc: 'Frais de relance (Applicable après 10 premières personnes)', qty: 1, price: 100.00, tax: 0 },
-                { desc: 'Frais de participation annuelle (après 6 mois)', qty: 1, price: 500.00, tax: 0 }
+                { desc: 'Frais d\'inscription pour la formation "Dream2Built1"', qty: 1, price: 100.00 },
+                { desc: 'Pack de ressources "Invest to Win More"', qty: 1, price: 50.00 },
+                { desc: 'Frais de relance (Applicable après 10 premières personnes)', qty: 1, price: 100.00 },
+                { desc: 'Frais de participation annuelle (après 6 mois)', qty: 1, price: 500.00 }
             ],
             'client-name': 'Nom du Client',
             'client-company': 'Nom de l\'Entreprise du Client',
@@ -560,13 +562,13 @@ Accepted payment methods:
             'description': 'Deskripsyon',
             'quantity': 'Kantite',
             'unit-price': 'Pri Inite',
-            'tax-rate': 'Taks (%)',
-            'total-amount': 'Montan total',
             'actions': 'Aksyon',
             'add-row-button': 'Ajoute yon liy',
             'currency-symbol-label': 'Senbòl lajan :',
             'subtotal': 'Sou-total :',
+            'global-tax-rate': 'Taks Global (%) :',
             'total-tax': 'Total Taks :',
+            'grand-total': 'Montan total :',
             'amount-received': 'Montan resevwa :',
             'balance-due': 'Rès pou peye :',
             'payment-terms-title': 'Kondisyon peman',
@@ -576,10 +578,10 @@ Accepted payment methods:
 - Peman mobil (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
             'footer-text': 'Mèsi pou konfyans ou! Nou kontan pou ede ou bati rèv ou.',
             'default-items': [
-                { desc: 'Frè enskripsyon pou fòmasyon "Dream2Built1"', qty: 1, price: 100.00, tax: 0 },
-                { desc: 'Pak resous "Invest to Win More"', qty: 1, price: 50.00, tax: 0 },
-                { desc: 'Frè relans (aplike apre 10 premye moun yo)', qty: 1, price: 100.00, tax: 0 },
-                { desc: 'Frè patisipasyon anyèl (apre 6 mwa)', qty: 1, price: 500.00, tax: 0 }
+                { desc: 'Frè enskripsyon pou fòmasyon "Dream2Built1"', qty: 1, price: 100.00 },
+                { desc: 'Pak resous "Invest to Win More"', qty: 1, price: 50.00 },
+                { desc: 'Frè relans (aplike apre 10 premye moun yo)', qty: 1, price: 100.00 },
+                { desc: 'Frè patisipasyon anyèl (apre 6 mwa)', qty: 1, price: 500.00 }
             ],
             'client-name': 'Non Kliyan',
             'client-company': 'Non Konpayi Kliyan an',
@@ -598,13 +600,13 @@ Accepted payment methods:
             'description': 'Descripción',
             'quantity': 'Cantidad',
             'unit-price': 'Precio unitario',
-            'tax-rate': 'Impuesto (%)',
-            'total-amount': 'Cantidad total',
             'actions': 'Acciones',
             'add-row-button': 'Añadir fila',
             'currency-symbol-label': 'Símbolo de moneda:',
             'subtotal': 'Subtotal :',
+            'global-tax-rate': 'Tasa de impuestos global (%) :',
             'total-tax': 'Impuesto total :',
+            'grand-total': 'Cantidad total :',
             'amount-received': 'Cantidad recibida :',
             'balance-due': 'Saldo pendiente :',
             'payment-terms-title': 'Condiciones de pago',
@@ -614,17 +616,17 @@ Accepted payment methods:
 - Pago móvil (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
             'footer-text': '¡Gracias por su confianza! Esperamos poder ayudarle a construir sus sueños.',
             'default-items': [
-                { desc: 'Tarifas de inscripción para la formación "Dream2Built1"', qty: 1, price: 100.00, tax: 0 },
-                { desc: 'Paquete de recursos "Invest to Win More"', qty: 1, price: 50.00, tax: 0 },
-                { desc: 'Tarifa de reactivación (aplicable después de las primeras 10 personas)', qty: 1, price: 100.00, tax: 0 },
-                { desc: 'Tarifa de participación anual (después de 6 meses)', qty: 1, price: 500.00, tax: 0 }
+                { desc: 'Tarifas de inscripción para la formación "Dream2Built1"', qty: 1, price: 100.00 },
+                { desc: 'Paquete de recursos "Invest to Win More"', qty: 1, price: 50.00 },
+                { desc: 'Tarifa de reactivación (aplicable después de las primeras 10 personas)', qty: 1, price: 100.00 },
+                { desc: 'Tarifa de participación anual (después de 6 meses)', qty: 1, price: 500.00 }
             ],
             'client-name': 'Client Name',
             'client-company': 'Client Company Name',
         }
     };
 
-    let currentLanguage = 'en'; // Langue par défaut
+    let currentLanguage = 'fr'; // Langue par défaut
     
     // Fonction pour mettre à jour la langue de l'interface
     function setLanguage(lang) {
@@ -656,12 +658,11 @@ Accepted payment methods:
         document.getElementById('removeLogoButton').textContent = translation['remove-logo-button'];
 
         // Mettre à jour les titres de la table
-        document.querySelector('thead th:nth-child(1)').textContent = translation['description'];
-        document.querySelector('thead th:nth-child(2)').textContent = translation['quantity'];
-        document.querySelector('thead th:nth-child(3)').textContent = translation['unit-price'];
-        document.querySelector('thead th:nth-child(4)').textContent = translation['tax-rate'];
-        document.querySelector('thead th:nth-child(5)').textContent = translation['total-amount'];
-        document.querySelector('thead th:nth-child(6)').textContent = translation['actions'];
+        const tableHeaders = document.querySelectorAll('thead th');
+        tableHeaders[0].textContent = translation['description'];
+        tableHeaders[1].textContent = translation['quantity'];
+        tableHeaders[2].textContent = translation['unit-price'];
+        tableHeaders[3].textContent = translation['actions'];
 
         // Mettre à jour le texte du bouton d'ajout de ligne
         document.querySelector('.table-actions button').textContent = translation['add-row-button'];
@@ -686,9 +687,6 @@ Accepted payment methods:
             span.textContent = currencySymbol;
         });
     }
-
-    // Variable pour stocker le logo par défaut
-    const defaultLogoUrl = 'https://i.postimg.cc/pX3JKSff/DREAM2B1.png';
 
     // Gérer le changement de logo
     document.getElementById('logoInput').addEventListener('change', function(event) {
@@ -763,7 +761,7 @@ Accepted payment methods:
     }
 
     // Fonction pour ajouter une ligne au tableau
-    function addRow(description = '', quantity = 1, price = 0, tax = 0) {
+    function addRow(description = '', quantity = 1, price = 0) {
         const tableBody = document.getElementById('invoiceTableBody');
         const newRow = document.createElement('tr');
         
@@ -773,8 +771,6 @@ Accepted payment methods:
             <td><input type="text" value="${description}"></td>
             <td><input type="number" class="quantity" value="${quantity}" min="0"></td>
             <td><input type="number" class="price" value="${price}" min="0" step="0.01"></td>
-            <td><input type="number" class="tax-rate" value="${tax}" min="0" step="0.01"></td>
-            <td><span class="total-amount">${((quantity * price) * (1 + tax / 100)).toFixed(2)}</span></td>
             <td><button class="remove-row-btn" onclick="removeRow(this)">${removeButtonText}</button></td>
         `;
 
@@ -801,29 +797,25 @@ Accepted payment methods:
     function calculateTotals() {
         const rows = document.querySelectorAll('#invoiceTableBody tr');
         let subtotal = 0;
-        let totalTax = 0;
 
         rows.forEach(row => {
             const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
             const price = parseFloat(row.querySelector('.price').value) || 0;
-            const taxRate = parseFloat(row.querySelector('.tax-rate').value) || 0;
             
             const lineTotal = quantity * price;
-            const lineTax = lineTotal * (taxRate / 100);
-            const lineGrandTotal = lineTotal + lineTax;
-
-            row.querySelector('.total-amount').textContent = lineGrandTotal.toFixed(2);
             subtotal += lineTotal;
-            totalTax += lineTax;
         });
 
-        const totalWithTax = subtotal + totalTax;
+        const globalTaxRate = parseFloat(document.getElementById('globalTaxRate').value) || 0;
+        const totalTax = subtotal * (globalTaxRate / 100);
+        const grandTotal = subtotal + totalTax;
         const amountReceived = parseFloat(document.getElementById('amountReceived').value) || 0;
         
-        const remainingDue = totalWithTax - amountReceived;
+        const remainingDue = grandTotal - amountReceived;
         
         document.getElementById('subtotal').textContent = subtotal.toFixed(2);
         document.getElementById('totalTax').textContent = totalTax.toFixed(2);
+        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
         document.getElementById('totalDue').textContent = remainingDue.toFixed(2);
 
         // Si le montant dû est 0 ou moins, on peut le mettre en évidence
@@ -876,7 +868,7 @@ Accepted payment methods:
         
         // Ajouter les lignes initiales avec les valeurs par défaut de la langue
         translation['default-items'].forEach(item => {
-            addRow(item.desc, item.qty, item.price, item.tax);
+            addRow(item.desc, item.qty, item.price);
         });
 
         // Réinitialiser le montant reçu
@@ -885,6 +877,9 @@ Accepted payment methods:
         // Réinitialiser le symbole de la devise
         document.getElementById('currencySymbolInput').value = '$';
         updateCurrencySymbol();
+        
+        // Réinitialiser le taux de taxe global
+        document.getElementById('globalTaxRate').value = '0';
 
         // Réinitialiser le contenu du champ de texte
         paymentMethodsTextarea.value = translation['payment-methods'].trim();
@@ -911,12 +906,14 @@ Accepted payment methods:
 
     // Appel de la fonction pour générer une nouvelle facture au chargement de la page
     document.addEventListener('DOMContentLoaded', () => {
-        setLanguage('en'); // Set default language to English
+        setLanguage('fr'); // Définir la langue par défaut sur le français
         generateNewInvoice();
     });
 
     // Ajout d'un écouteur d'événement au champ "Montant reçu" pour recalculer les totaux
     document.getElementById('amountReceived').addEventListener('input', calculateTotals);
+    // Ajout d'un écouteur d'événement au champ "Taux de taxe global" pour recalculer les totaux
+    document.getElementById('globalTaxRate').addEventListener('input', calculateTotals);
     // Ajout d'un écouteur d'événement à la date d'échéance pour mettre à jour le texte
     document.getElementById('dueDate').addEventListener('change', updateDueDateText);
     // Ajout d'un écouteur d'événement pour mettre à jour le symbole de la devise
