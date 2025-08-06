@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facture - DREAM2BUILT1</title>
+    <title>Invoice - DREAM2BUILT1</title>
     <!-- Styles CSS pour la mise en page de la facture -->
     <style>
         body {
@@ -38,11 +38,59 @@
         .header .logo-container {
             flex: 1;
             min-width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
-        .header img {
-            max-width: 150px;
+        /* Style pour la zone de téléchargement de logo */
+        .logo-upload {
+            cursor: pointer;
+            position: relative;
+            display: block;
+            width: 150px;
             height: auto;
+            border: 2px dashed #ccc;
             border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        .logo-upload:hover {
+            border-color: #3498db;
+        }
+        .logo-upload img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            transition: opacity 0.3s ease;
+        }
+        .logo-upload .upload-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #888;
+            font-size: 14px;
+            z-index: 1;
+            display: none;
+        }
+        .logo-upload.empty .upload-text {
+            display: block;
+        }
+        .logo-upload.empty img {
+            opacity: 0.2;
+        }
+        .remove-logo-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-top: 5px;
+            display: none; /* Masqué par défaut */
         }
         .header .company-info {
             flex: 2;
@@ -78,9 +126,7 @@
         .invoice-details input[type="text"],
         .invoice-details input[type="date"],
         .client-info input[type="text"],
-        .total-summary input[type="number"],
-        .company-info input[type="text"],
-        .payment-terms textarea {
+        .total-summary input:not(.currency-input) {
             border: 1px solid #ccc;
             padding: 5px 8px;
             border-radius: 4px;
@@ -111,7 +157,6 @@
             box-sizing: border-box;
             margin-top: 5px;
         }
-
         .table-container {
             margin-top: 30px;
             overflow-x: auto;
@@ -228,6 +273,33 @@
         .remove-row-btn:hover {
             background-color: #c0392b;
         }
+        .language-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .language-buttons button {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.3s ease;
+        }
+        .language-buttons button:hover {
+            background-color: #7f8c8d;
+        }
+        .currency-input {
+            width: 50px;
+            text-align: center;
+            margin-left: 5px;
+            border: 1px solid #ccc;
+            padding: 5px 8px;
+            border-radius: 4px;
+        }
         /* Styles responsifs pour les petits écrans */
         @media (max-width: 600px) {
             .invoice-container {
@@ -241,6 +313,9 @@
             .header .company-info {
                 text-align: center;
                 margin-top: 15px;
+            }
+            .header .logo-container {
+                align-items: center;
             }
             .header img {
                 margin-bottom: 10px;
@@ -258,13 +333,28 @@
                 margin: 5px;
             }
         }
-        /* Masquer les boutons lors de l'impression */
+        /* Masquer les boutons lors de l'impression et ajuster les marges pour économiser de l'espace */
         @media print {
-            .actions, .table-actions {
+            .actions, .table-actions, .logo-upload, .remove-logo-btn, .language-buttons {
                 display: none;
             }
             input {
                 border: none;
+                padding: 0;
+            }
+            .invoice-container {
+                padding: 10mm;
+                margin: 0;
+                box-shadow: none;
+            }
+            .header, .invoice-details, .client-info, .payment-terms, .total-summary, .footer {
+                margin-bottom: 10px; /* Réduire l'espacement vertical */
+            }
+            th, td {
+                padding: 8px; /* Réduire le padding des cellules de tableau */
+            }
+            .total-summary input[type="number"] {
+                width: 100px !important;
             }
         }
     </style>
@@ -272,15 +362,28 @@
 <body>
 
 <div class="invoice-container">
+    <div class="language-buttons">
+        <button onclick="setLanguage('en')">English</button>
+        <button onclick="setLanguage('fr')">Français</button>
+        <button onclick="setLanguage('ht')">Kreyòl Ayisyen</button>
+        <button onclick="setLanguage('es')">Español</button>
+    </div>
     <div class="actions">
-        <button onclick="generateNewInvoice()">Générer une nouvelle facture</button>
-        <button onclick="window.print()">Imprimer la facture</button>
+        <!-- New button to save the invoice as an HTML file -->
+        <button onclick="saveInvoice()">Save Invoice</button>
+        <button onclick="generateNewInvoice()">Generate New Invoice</button>
+        <button onclick="window.print()">Print Invoice</button>
     </div>
 
     <div class="header">
         <div class="logo-container">
-            <!-- Utilisation d'une image pour le logo de DREAM2BUILT1 -->
-            <img src="https://i.postimg.cc/pX3JKSff/DREAM2B1.png" alt="DREAM2BUILT1 Logo">
+            <!-- Logo upload area -->
+            <label for="logoInput" class="logo-upload empty">
+                <img id="logoImage" src="" alt="Company Logo">
+                <span class="upload-text">Click to add a logo</span>
+            </label>
+            <input type="file" id="logoInput" accept="image/*" style="display: none;">
+            <button id="removeLogoButton" class="remove-logo-btn" onclick="removeLogo()">Remove Logo</button>
         </div>
         <div class="company-info">
             <input type="text" id="companyName" value="DREAM2BUILT1">
@@ -295,39 +398,39 @@
 
     <div class="invoice-details">
         <div>
-            <span>FACTURE N° :</span>
+            <span data-lang="invoice-number">INVOICE N° :</span>
             <input type="text" id="invoiceNumber" value="INV-2025-08-06-0001">
         </div>
         <div>
-            <span>Date de facturation :</span>
+            <span data-lang="invoice-date">Invoice Date :</span>
             <input type="date" id="invoiceDate" value="2025-08-06">
         </div>
         <div>
-            <span>Date d'échéance :</span>
+            <span data-lang="due-date">Due Date :</span>
             <input type="date" id="dueDate" value="2025-08-20">
         </div>
     </div>
 
     <div class="client-info">
-        <h3>Facture à :</h3>
-        <div><input type="text" value="Nom du Client"></div>
-        <div><input type="text" value="Nom de l'Entreprise du Client"></div>
-        <div><input type="text" value="123 Avenue du Progrès"></div>
-        <div><input type="text" value="Pétion-Ville, HT 6120, Haïti"></div>
-        <div><input type="text" value="+509 9876 5432"></div>
-        <div><input type="text" value="client@email.com"></div>
+        <h3 data-lang="bill-to">Bill to :</h3>
+        <input type="text" id="clientName" value="Client Name">
+        <input type="text" id="clientCompany" value="Client Company Name">
+        <input type="text" id="clientAddress" value="123 Avenue du Progrès">
+        <input type="text" id="clientCity" value="Pétion-Ville, HT 6120, Haïti">
+        <input type="text" id="clientPhone" value="+509 9876 5432">
+        <input type="text" id="clientEmail" value="client@email.com">
     </div>
 
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th>Description</th>
-                    <th>Quantité</th>
-                    <th>Prix unitaire (Gdes)</th>
-                    <th>Taxe (%)</th>
-                    <th>Montant total (Gdes)</th>
-                    <th>Actions</th>
+                    <th data-lang="description">Description</th>
+                    <th data-lang="quantity">Quantity</th>
+                    <th data-lang="unit-price">Unit Price</th>
+                    <th data-lang="tax-rate">Tax (%)</th>
+                    <th data-lang="total-amount">Total Amount</th>
+                    <th data-lang="actions">Actions</th>
                 </tr>
             </thead>
             <tbody id="invoiceTableBody">
@@ -335,34 +438,314 @@
             </tbody>
         </table>
         <div class="table-actions">
-            <button onclick="addRow()">Ajouter une ligne</button>
+            <button onclick="addRow()" data-lang="add-row-button">Add Row</button>
         </div>
     </div>
 
     <div class="total-summary">
-        <div><span>Sous-total :</span> <span id="subtotal">0.00</span> Gdes</div>
-        <div><span>Taxe Totale (Gdes) :</span> <span id="totalTax">0.00</span> Gdes</div>
-        <div><span>Montant reçu :</span> <input type="number" id="amountReceived" value="0" min="0" step="0.01"> Gdes</div>
-        <div class="total"><span>Reste à payer :</span> <span id="totalDue">0.00</span> Gdes</div>
+        <div><span data-lang="currency-symbol-label">Currency Symbol:</span> <input type="text" class="currency-input" id="currencySymbolInput" value="$"></div>
+        <div><span data-lang="subtotal">Subtotal :</span> <span id="subtotal">0.00</span> <span class="currencySymbol"></span></div>
+        <div><span data-lang="total-tax">Total Tax :</span> <span id="totalTax">0.00</span> <span class="currencySymbol"></span></div>
+        <!-- Ligne modifiée pour inverser l'ordre -->
+        <div><span data-lang="amount-received">Amount Received :</span> <input type="number" id="amountReceived" value="0" min="0" step="0.01" style="width: 100px; text-align: center;"> <span class="currencySymbol"></span></div>
+        <div class="total"><span data-lang="balance-due">Balance Due :</span> <span id="totalDue">0.00</span> <span class="currencySymbol"></span></div>
     </div>
 
     <div class="payment-terms">
-        <h3>Conditions de paiement</h3>
+        <h3 data-lang="payment-terms-title">Payment Terms</h3>
         <p>
-            Veuillez effectuer le paiement au plus tard le <input type="text" id="dynamicDueDateText" value="20/08/2025" style="width: 100px; text-align: center;">.
+            <span data-lang="payment-due-date-text">Please make the payment by</span> <input type="text" id="dynamicDueDateText" value="20/08/2025" style="width: 100px; text-align: center;">.
         </p>
         <textarea id="paymentMethods" rows="4">
-Méthodes de paiement acceptées :
-- Virement bancaire (Compte #1234567890, Banque Nationale de Crédit)
-- Paiement mobile (Moncash: +509 1234 5678, Natcash: +509 9876 5432)</textarea>
+Accepted payment methods:
+- Bank transfer (Account #1234567890, Bank National Credit)
+- Mobile payment (Moncash: +509 1234 5678, Natcash: +509 9876 5432)</textarea>
     </div>
 
     <div class="footer">
-        <p>Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la construction de vos rêves.</p>
+        <p data-lang="footer-text">Thank you for your trust! We look forward to helping you build your dreams.</p>
     </div>
 </div>
 
 <script>
+    // Translations object
+    const translations = {
+        'en': {
+            'title': 'Invoice - DREAM2BUILT1',
+            'save-button': 'Save Invoice',
+            'generate-button': 'Generate New Invoice',
+            'print-button': 'Print Invoice',
+            'logo-upload-text': 'Click to add a logo',
+            'remove-logo-button': 'Remove Logo',
+            'invoice-number': 'INVOICE N° :',
+            'invoice-date': 'Invoice Date :',
+            'due-date': 'Due Date :',
+            'bill-to': 'Bill to :',
+            'description': 'Description',
+            'quantity': 'Quantity',
+            'unit-price': 'Unit Price',
+            'tax-rate': 'Tax (%)',
+            'total-amount': 'Total Amount',
+            'actions': 'Actions',
+            'add-row-button': 'Add Row',
+            'currency-symbol-label': 'Currency Symbol:',
+            'subtotal': 'Subtotal :',
+            'total-tax': 'Total Tax :',
+            'amount-received': 'Amount Received :',
+            'balance-due': 'Balance Due :',
+            'payment-terms-title': 'Payment Terms',
+            'payment-due-date-text': 'Please make the payment by',
+            'payment-methods': `Accepted payment methods:
+- Bank transfer (Account #1234567890, Bank National Credit)
+- Mobile payment (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
+            'footer-text': 'Thank you for your trust! We look forward to helping you build your dreams.',
+            'default-items': [
+                { desc: 'Registration fees for "Dream2Built1" training', qty: 1, price: 100.00, tax: 0 },
+                { desc: '"Invest to Win More" resource pack', qty: 1, price: 50.00, tax: 0 },
+                { desc: 'Revival fee (Applicable after the first 10 people)', qty: 1, price: 100.00, tax: 0 },
+                { desc: 'Annual participation fee (after 6 months)', qty: 1, price: 500.00, tax: 0 }
+            ],
+            'client-name': 'Client Name',
+            'client-company': 'Client Company Name',
+        },
+        'fr': {
+            'title': 'Facture - DREAM2BUILT1',
+            'save-button': 'Sauvegarder la facture',
+            'generate-button': 'Générer une nouvelle facture',
+            'print-button': 'Imprimer la facture',
+            'logo-upload-text': 'Cliquer pour ajouter un logo',
+            'remove-logo-button': 'Supprimer le logo',
+            'invoice-number': 'FACTURE N° :',
+            'invoice-date': 'Date de facturation :',
+            'due-date': 'Date d\'échéance :',
+            'bill-to': 'Facture à :',
+            'description': 'Description',
+            'quantity': 'Quantité',
+            'unit-price': 'Prix unitaire',
+            'tax-rate': 'Taxe (%)',
+            'total-amount': 'Montant total',
+            'actions': 'Actions',
+            'add-row-button': 'Ajouter une ligne',
+            'currency-symbol-label': 'Symbole de la devise :',
+            'subtotal': 'Sous-total :',
+            'total-tax': 'Taxe Totale :',
+            'amount-received': 'Montant reçu :',
+            'balance-due': 'Reste à payer :',
+            'payment-terms-title': 'Conditions de paiement',
+            'payment-due-date-text': 'Veuillez effectuer le paiement au plus tard le',
+            'payment-methods': `Méthodes de paiement acceptées :
+- Virement bancaire (Compte #1234567890, Banque Nationale de Crédit)
+- Paiement mobile (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
+            'footer-text': 'Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la construction de vos rêves.',
+            'default-items': [
+                { desc: 'Frais d\'inscription pour la formation "Dream2Built1"', qty: 1, price: 100.00, tax: 0 },
+                { desc: 'Pack de ressources "Invest to Win More"', qty: 1, price: 50.00, tax: 0 },
+                { desc: 'Frais de relance (Applicable après 10 premières personnes)', qty: 1, price: 100.00, tax: 0 },
+                { desc: 'Frais de participation annuelle (après 6 mois)', qty: 1, price: 500.00, tax: 0 }
+            ],
+            'client-name': 'Nom du Client',
+            'client-company': 'Nom de l\'Entreprise du Client',
+        },
+        'ht': {
+            'title': 'Fakti - DREAM2BUILT1',
+            'save-button': 'Sove Fakti',
+            'generate-button': 'Jenere yon nouvo fakti',
+            'print-button': 'Enprime Fakti',
+            'logo-upload-text': 'Klike pou mete yon logo',
+            'remove-logo-button': 'Retire Logo a',
+            'invoice-number': 'FAKTI N° :',
+            'invoice-date': 'Dat Fakti :',
+            'due-date': 'Dat Echeyans :',
+            'bill-to': 'Fakti pou :',
+            'description': 'Deskripsyon',
+            'quantity': 'Kantite',
+            'unit-price': 'Pri Inite',
+            'tax-rate': 'Taks (%)',
+            'total-amount': 'Montan total',
+            'actions': 'Aksyon',
+            'add-row-button': 'Ajoute yon liy',
+            'currency-symbol-label': 'Senbòl lajan :',
+            'subtotal': 'Sou-total :',
+            'total-tax': 'Total Taks :',
+            'amount-received': 'Montan resevwa :',
+            'balance-due': 'Rès pou peye :',
+            'payment-terms-title': 'Kondisyon peman',
+            'payment-due-date-text': 'Tanpri fè peman an avan',
+            'payment-methods': `Metòd peman yo aksepte :
+- Transfè labank (Kont #1234567890, Bank Nasyonal Kredi)
+- Peman mobil (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
+            'footer-text': 'Mèsi pou konfyans ou! Nou kontan pou ede ou bati rèv ou.',
+            'default-items': [
+                { desc: 'Frè enskripsyon pou fòmasyon "Dream2Built1"', qty: 1, price: 100.00, tax: 0 },
+                { desc: 'Pak resous "Invest to Win More"', qty: 1, price: 50.00, tax: 0 },
+                { desc: 'Frè relans (aplike apre 10 premye moun yo)', qty: 1, price: 100.00, tax: 0 },
+                { desc: 'Frè patisipasyon anyèl (apre 6 mwa)', qty: 1, price: 500.00, tax: 0 }
+            ],
+            'client-name': 'Non Kliyan',
+            'client-company': 'Non Konpayi Kliyan an',
+        },
+        'es': {
+            'title': 'Factura - DREAM2BUILT1',
+            'save-button': 'Guardar Factura',
+            'generate-button': 'Generar nueva factura',
+            'print-button': 'Imprimir Factura',
+            'logo-upload-text': 'Haga clic para agregar un logo',
+            'remove-logo-button': 'Quitar logo',
+            'invoice-number': 'FACTURA N° :',
+            'invoice-date': 'Fecha de la factura :',
+            'due-date': 'Fecha de vencimiento :',
+            'bill-to': 'Facturar a :',
+            'description': 'Descripción',
+            'quantity': 'Cantidad',
+            'unit-price': 'Precio unitario',
+            'tax-rate': 'Impuesto (%)',
+            'total-amount': 'Cantidad total',
+            'actions': 'Acciones',
+            'add-row-button': 'Añadir fila',
+            'currency-symbol-label': 'Símbolo de moneda:',
+            'subtotal': 'Subtotal :',
+            'total-tax': 'Impuesto total :',
+            'amount-received': 'Cantidad recibida :',
+            'balance-due': 'Saldo pendiente :',
+            'payment-terms-title': 'Condiciones de pago',
+            'payment-due-date-text': 'Por favor, realice el pago a más tardar el',
+            'payment-methods': `Métodos de pago aceptados:
+- Transferencia bancaria (Cuenta #1234567890, Banco Nacional de Crédito)
+- Pago móvil (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
+            'footer-text': '¡Gracias por su confianza! Esperamos poder ayudarle a construir sus sueños.',
+            'default-items': [
+                { desc: 'Tarifas de inscripción para la formación "Dream2Built1"', qty: 1, price: 100.00, tax: 0 },
+                { desc: 'Paquete de recursos "Invest to Win More"', qty: 1, price: 50.00, tax: 0 },
+                { desc: 'Tarifa de reactivación (aplicable después de las primeras 10 personas)', qty: 1, price: 100.00, tax: 0 },
+                { desc: 'Tarifa de participación anual (después de 6 meses)', qty: 1, price: 500.00, tax: 0 }
+            ],
+            'client-name': 'Client Name',
+            'client-company': 'Client Company Name',
+        }
+    };
+
+    let currentLanguage = 'en'; // Langue par défaut
+    
+    // Fonction pour mettre à jour la langue de l'interface
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        const translation = translations[lang];
+
+        // Mettre à jour le titre de la page
+        document.title = translation.title;
+
+        // Mettre à jour les textes des boutons principaux
+        document.querySelector('.actions button:nth-child(1)').textContent = translation['save-button'];
+        document.querySelector('.actions button:nth-child(2)').textContent = translation['generate-button'];
+        document.querySelector('.actions button:nth-child(3)').textContent = translation['print-button'];
+
+        // Mettre à jour les textes des éléments avec l'attribut data-lang
+        document.querySelectorAll('[data-lang]').forEach(element => {
+            const key = element.getAttribute('data-lang');
+            if (translation[key]) {
+                element.textContent = translation[key];
+            }
+        });
+
+        // Mettre à jour les valeurs par défaut des inputs (client info)
+        document.getElementById('clientName').value = translation['client-name'];
+        document.getElementById('clientCompany').value = translation['client-company'];
+
+        // Mettre à jour le placeholder du logo
+        document.querySelector('.logo-upload .upload-text').textContent = translation['logo-upload-text'];
+        document.getElementById('removeLogoButton').textContent = translation['remove-logo-button'];
+
+        // Mettre à jour les titres de la table
+        document.querySelector('thead th:nth-child(1)').textContent = translation['description'];
+        document.querySelector('thead th:nth-child(2)').textContent = translation['quantity'];
+        document.querySelector('thead th:nth-child(3)').textContent = translation['unit-price'];
+        document.querySelector('thead th:nth-child(4)').textContent = translation['tax-rate'];
+        document.querySelector('thead th:nth-child(5)').textContent = translation['total-amount'];
+        document.querySelector('thead th:nth-child(6)').textContent = translation['actions'];
+
+        // Mettre à jour le texte du bouton d'ajout de ligne
+        document.querySelector('.table-actions button').textContent = translation['add-row-button'];
+        
+        // Mettre à jour le texte du bouton de suppression de ligne pour les lignes existantes
+        document.querySelectorAll('.remove-row-btn').forEach(btn => btn.textContent = lang === 'fr' ? 'Supprimer' : lang === 'ht' ? 'Retire' : lang === 'es' ? 'Eliminar' : 'Remove');
+
+        // Mettre à jour le contenu de la zone de texte des méthodes de paiement
+        document.getElementById('paymentMethods').value = translation['payment-methods'].trim();
+
+        // Mettre à jour le texte du footer
+        document.querySelector('.footer p').textContent = translation['footer-text'];
+        
+        // Mettre à jour le symbole de la devise affiché
+        updateCurrencySymbol();
+    }
+
+    // Fonction pour mettre à jour le symbole de la devise sur l'interface
+    function updateCurrencySymbol() {
+        const currencySymbol = document.getElementById('currencySymbolInput').value;
+        document.querySelectorAll('.currencySymbol').forEach(span => {
+            span.textContent = currencySymbol;
+        });
+    }
+
+    // Variable pour stocker le logo par défaut
+    const defaultLogoUrl = 'https://i.postimg.cc/pX3JKSff/DREAM2B1.png';
+
+    // Gérer le changement de logo
+    document.getElementById('logoInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('logoImage').src = e.target.result;
+                document.getElementById('removeLogoButton').style.display = 'block';
+                document.querySelector('.logo-upload').classList.remove('empty');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Supprimer le logo
+    function removeLogo() {
+        document.getElementById('logoImage').src = '';
+        document.getElementById('removeLogoButton').style.display = 'none';
+        document.querySelector('.logo-upload').classList.add('empty');
+        // Réinitialiser l'input file pour pouvoir re-sélectionner le même fichier
+        document.getElementById('logoInput').value = '';
+    }
+
+    // Fonction pour sauvegarder la facture en tant que fichier HTML
+    function saveInvoice() {
+        // Crée une copie du document actuel pour le nettoyage
+        const invoiceCopy = document.documentElement.cloneNode(true);
+
+        // Supprime les boutons d'action du document copié pour avoir une version propre
+        const actionElements = invoiceCopy.querySelectorAll('.actions, .table-actions, .remove-logo-btn, .logo-upload, .language-buttons');
+        actionElements.forEach(el => el.parentNode.removeChild(el));
+
+        // Rendre les champs de saisie en texte statique
+        const inputs = invoiceCopy.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], textarea');
+        inputs.forEach(input => {
+            const span = invoiceCopy.createElement('span');
+            span.textContent = input.value;
+            input.parentNode.replaceChild(span, input);
+        });
+        
+        // Crée le contenu HTML de la facture sauvegardée
+        const htmlContent = `<!DOCTYPE html>${invoiceCopy.outerHTML}`;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+
+        // Crée un lien de téléchargement et le déclenche
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const invoiceNumber = document.getElementById('invoiceNumber').value;
+        a.href = url;
+        a.download = `facture-${invoiceNumber}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
     // Fonction pour obtenir la date actuelle au format YYYY-MM-DD
     function getCurrentDate() {
         const today = new Date();
@@ -384,13 +767,15 @@ Méthodes de paiement acceptées :
         const tableBody = document.getElementById('invoiceTableBody');
         const newRow = document.createElement('tr');
         
+        const removeButtonText = currentLanguage === 'fr' ? 'Supprimer' : currentLanguage === 'ht' ? 'Retire' : currentLanguage === 'es' ? 'Eliminar' : 'Remove';
+
         newRow.innerHTML = `
             <td><input type="text" value="${description}"></td>
             <td><input type="number" class="quantity" value="${quantity}" min="0"></td>
             <td><input type="number" class="price" value="${price}" min="0" step="0.01"></td>
             <td><input type="number" class="tax-rate" value="${tax}" min="0" step="0.01"></td>
             <td><span class="total-amount">${((quantity * price) * (1 + tax / 100)).toFixed(2)}</span></td>
-            <td><button class="remove-row-btn" onclick="removeRow(this)">Supprimer</button></td>
+            <td><button class="remove-row-btn" onclick="removeRow(this)">${removeButtonText}</button></td>
         `;
 
         tableBody.appendChild(newRow);
@@ -443,9 +828,9 @@ Méthodes de paiement acceptées :
 
         // Si le montant dû est 0 ou moins, on peut le mettre en évidence
         if (remainingDue <= 0) {
-            document.getElementById('totalDue').style.color = '#27ae60'; // Vert
+            document.getElementById('totalDue').style.color = '#27ae60'; // Green
         } else {
-            document.getElementById('totalDue').style.color = '#e74c3c'; // Rouge
+            document.getElementById('totalDue').style.color = '#e74c3c'; // Red
         }
     }
 
@@ -455,7 +840,7 @@ Méthodes de paiement acceptées :
         const dynamicDueDateTextInput = document.getElementById('dynamicDueDateText');
         if (dueDateInput && dynamicDueDateTextInput) {
             const date = new Date(dueDateInput.value);
-            const formattedDate = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const formattedDate = date.toLocaleDateString(currentLanguage, { day: '2-digit', month: '2-digit', year: 'numeric' });
             dynamicDueDateTextInput.value = formattedDate;
         }
     }
@@ -468,14 +853,16 @@ Méthodes de paiement acceptées :
         const tableBody = document.getElementById('invoiceTableBody');
         const paymentMethodsTextarea = document.getElementById('paymentMethods');
 
-        // Met à jour le numéro de facture
+        const translation = translations[currentLanguage];
+
+        // Mettre à jour le numéro de facture
         invoiceNumberInput.value = generateInvoiceNumber();
 
-        // Met à jour la date de facturation à la date du jour
+        // Mettre à jour la date de facturation à la date du jour
         const currentDate = getCurrentDate();
         invoiceDateInput.value = currentDate;
         
-        // Met à jour la date d'échéance à 14 jours de la date du jour
+        // Mettre à jour la date d'échéance à 14 jours de la date du jour
         const dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + 14);
         const dueYear = dueDate.getFullYear();
@@ -487,20 +874,20 @@ Méthodes de paiement acceptées :
         // Réinitialiser le tableau
         tableBody.innerHTML = '';
         
-        // Ajouter les lignes initiales avec les valeurs par défaut
-        addRow('Frais d\'inscription pour la formation "Dream2Built1"', 1, 100.00, 0);
-        addRow('Pack de ressources "Invest to Win More"', 1, 50.00, 0);
-        addRow('Frais de relance (Applicable après 10 premières personnes)', 1, 100.00, 0);
-        addRow('Frais de participation annuelle (après 6 mois)', 1, 500.00, 0);
+        // Ajouter les lignes initiales avec les valeurs par défaut de la langue
+        translation['default-items'].forEach(item => {
+            addRow(item.desc, item.qty, item.price, item.tax);
+        });
 
         // Réinitialiser le montant reçu
         document.getElementById('amountReceived').value = 0;
+        
+        // Réinitialiser le symbole de la devise
+        document.getElementById('currencySymbolInput').value = '$';
+        updateCurrencySymbol();
 
         // Réinitialiser le contenu du champ de texte
-        paymentMethodsTextarea.value = `
-Méthodes de paiement acceptées :
-- Virement bancaire (Compte #1234567890, Banque Nationale de Crédit)
-- Paiement mobile (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`.trim();
+        paymentMethodsTextarea.value = translation['payment-methods'].trim();
         
         // Réinitialiser les champs de l'entreprise
         document.getElementById('companyName').value = 'DREAM2BUILT1';
@@ -510,19 +897,30 @@ Méthodes de paiement acceptées :
         document.getElementById('companyPhone').value = '+509 1234 5678';
         document.getElementById('companyEmail').value = 'contact@dream2built1.com';
         document.getElementById('companyWebsite').value = 'www.dream2built1.com';
+        
+        // Réinitialiser les champs du client
+        document.getElementById('clientName').value = translation['client-name'];
+        document.getElementById('clientCompany').value = translation['client-company'];
 
+        // Réinitialiser le logo à la valeur par défaut
+        removeLogo();
 
         // Calculer les totaux initiaux
         calculateTotals();
     }
 
     // Appel de la fonction pour générer une nouvelle facture au chargement de la page
-    document.addEventListener('DOMContentLoaded', generateNewInvoice);
+    document.addEventListener('DOMContentLoaded', () => {
+        setLanguage('en'); // Set default language to English
+        generateNewInvoice();
+    });
 
     // Ajout d'un écouteur d'événement au champ "Montant reçu" pour recalculer les totaux
     document.getElementById('amountReceived').addEventListener('input', calculateTotals);
     // Ajout d'un écouteur d'événement à la date d'échéance pour mettre à jour le texte
     document.getElementById('dueDate').addEventListener('change', updateDueDateText);
+    // Ajout d'un écouteur d'événement pour mettre à jour le symbole de la devise
+    document.getElementById('currencySymbolInput').addEventListener('input', updateCurrencySymbol);
 </script>
 
 </body>
