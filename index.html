@@ -33,7 +33,7 @@
             align-items: center;
             border-bottom: 2px solid #2c3e50;
             padding-bottom: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Espace réduit */
         }
         .header .logo-container {
             flex: 1;
@@ -109,14 +109,14 @@
         }
         /* Style pour les champs de saisie */
         .invoice-details, .client-info, .payment-terms {
-            margin-bottom: 25px;
-            line-height: 1.8;
+            margin-bottom: 15px; /* Espace réduit */
+            line-height: 1.5; /* Espace de ligne réduit */
             background-color: #ecf0f1;
             padding: 15px;
             border-radius: 8px;
         }
         .invoice-details div, .client-info div {
-            margin-bottom: 8px;
+            margin-bottom: 4px; /* Espace réduit */
         }
         .invoice-details span, .client-info span {
             font-weight: bold;
@@ -158,7 +158,7 @@
             margin-top: 5px;
         }
         .table-container {
-            margin-top: 30px;
+            margin-top: 20px; /* Espace réduit */
             overflow-x: auto;
         }
         table {
@@ -169,7 +169,7 @@
             overflow: hidden;
         }
         th, td {
-            padding: 15px;
+            padding: 10px; /* Espace réduit */
             border-bottom: 1px solid #e0e0e0;
         }
         thead th {
@@ -203,12 +203,12 @@
         }
         .total-summary {
             text-align: right;
-            margin-top: 25px;
+            margin-top: 15px; /* Espace réduit */
             padding-top: 15px;
             border-top: 2px solid #34495e;
         }
         .total-summary div {
-            padding: 8px 0;
+            padding: 5px 0; /* Espace réduit */
             font-size: 1.1em;
         }
         .total-summary .total {
@@ -216,19 +216,19 @@
             font-weight: bold;
             color: #2c3e50;
             padding-top: 15px;
-            margin-top: 15px;
+            margin-top: 10px; /* Espace réduit */
         }
         .payment-terms {
-            margin-top: 30px;
+            margin-top: 20px; /* Espace réduit */
             border-top: 1px solid #ddd;
-            padding-top: 20px;
+            padding-top: 15px; /* Espace réduit */
             background-color: #ecf0f1;
             padding: 20px;
             border-radius: 8px;
         }
         .payment-terms h3 {
             color: #34495e;
-            margin-bottom: 15px;
+            margin-bottom: 10px; /* Espace réduit */
             font-size: 18px;
         }
         .payment-terms p {
@@ -243,25 +243,43 @@
             color: #555;
         }
         .footer {
-            margin-top: 40px;
+            margin-top: 20px; /* Espace réduit */
             text-align: center;
             color: #7f8c8d;
             font-size: 14px;
+            display: flex; /* Utiliser flexbox */
+            flex-direction: column; /* Organiser en colonne */
+            align-items: center; /* Centrer horizontalement */
+            position: relative; /* Pour positionner le menu déroulant */
         }
+        /* Style pour le nouveau textarea du footer */
+        #footerTextarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+        /* Styles pour les petits boutons d'action au pied de page */
         .actions {
+            position: fixed; /* Position fixe par rapport à la fenêtre */
+            bottom: 20px;    /* 20px du bas */
+            right: 20px;     /* 20px de la droite */
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
+            gap: 10px;       /* Espacement entre les boutons */
+            z-index: 1000;   /* S'assurer que les boutons sont au-dessus des autres éléments */
         }
         .actions button {
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 10px 20px;
-            margin-left: 10px;
+            padding: 8px 12px; /* Rendre le padding plus petit */
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.8em; /* Rendre la police plus petite */
             transition: background-color 0.3s ease;
         }
         .actions button:hover {
@@ -272,25 +290,6 @@
         }
         .remove-row-btn:hover {
             background-color: #c0392b;
-        }
-        .language-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        .language-buttons button {
-            background-color: #95a5a6;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            margin: 0 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8em;
-            transition: background-color 0.3s ease;
-        }
-        .language-buttons button:hover {
-            background-color: #7f8c8d;
         }
         .currency-input {
             width: 50px;
@@ -303,6 +302,32 @@
         .total-amount-row {
             text-align: right;
         }
+        /* Style pour le menu déroulant de langue */
+        .language-select-footer {
+            position: absolute; /* Positionnement absolu dans le footer */
+            bottom: 0; /* Aligné au bas du footer */
+            right: 0; /* Aligné à droite du footer */
+            padding: 2px;
+            font-size: 12px;
+            border-radius: 4px;
+            background-color: #ecf0f1;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        /* NOUVEAUX STYLES POUR LE TEXTAREA DYNAMIQUE */
+        .description-textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+            resize: none; /* Empêche le redimensionnement manuel par l'utilisateur */
+            overflow: hidden; /* Cache la barre de défilement */
+            min-height: 40px; /* Hauteur minimale d'un input normal */
+        }
+
         /* Styles responsifs pour les petits écrans */
         @media (max-width: 600px) {
             .invoice-container {
@@ -331,24 +356,48 @@
             }
             .actions {
                 justify-content: center;
+                right: 0;
+                left: 0;
+                bottom: 10px;
+                gap: 5px;
             }
             .actions button {
-                margin: 5px;
+                margin: 0 2px;
+                padding: 6px 10px;
+            }
+            .language-select-footer {
+                position: static; /* Positionnement statique sur mobile */
+                margin-top: 10px; /* Ajouter une marge pour l'espacement */
+                width: 100%; /* Occupe toute la largeur */
+                text-align: center;
             }
         }
         /* Masquer les boutons lors de l'impression et ajuster les marges pour économiser de l'espace */
         @media print {
-            .actions, .table-actions, .logo-upload, .remove-logo-btn, .language-buttons {
+            /* Définit la taille de la page à 8.5 x 11 pouces (US Letter) */
+            @page {
+                size: 8.5in 11in;
+                margin: 0.5in;
+            }
+            /* C'est ici que l'élément est masqué */
+            .actions, .table-actions, .logo-upload, .remove-logo-btn, .language-select-footer {
                 display: none;
             }
-            input {
+            input, textarea {
                 border: none;
                 padding: 0;
             }
-            .invoice-container {
-                padding: 10mm;
+            body {
+                padding: 0;
                 margin: 0;
+            }
+            .invoice-container {
+                width: 100%;
+                max-width: 100%;
                 box-shadow: none;
+                border: none;
+                margin: 0;
+                padding: 0;
             }
             .header, .invoice-details, .client-info, .payment-terms, .total-summary, .footer {
                 margin-bottom: 10px; /* Réduire l'espacement vertical */
@@ -365,19 +414,6 @@
 <body>
 
 <div class="invoice-container">
-    <div class="language-buttons">
-        <button onclick="setLanguage('en')">English</button>
-        <button onclick="setLanguage('fr')">Français</button>
-        <button onclick="setLanguage('ht')">Kreyòl Ayisyen</button>
-        <button onclick="setLanguage('es')">Español</button>
-    </div>
-    <div class="actions">
-        <!-- Nouveau bouton pour sauvegarder la facture en tant que fichier HTML -->
-        <button onclick="saveInvoice()">Sauvegarder la facture</button>
-        <button onclick="generateNewInvoice()">Générer une nouvelle facture</button>
-        <button onclick="window.print()">Imprimer la facture</button>
-    </div>
-
     <div class="header">
         <div class="logo-container">
             <!-- Zone de téléchargement de logo -->
@@ -417,7 +453,7 @@
     <div class="client-info">
         <h3 data-lang="bill-to">Facture à :</h3>
         <input type="text" id="clientName" value="Nom du Client">
-        <input type="text" id="clientCompany" value="Nom de l'Entreprise du Client">
+        <input type="text" id="clientCompany" value="Nomdel'EntrepriseduClient">
         <input type="text" id="clientAddress" value="123 Avenue du Progrès">
         <input type="text" id="clientCity" value="Pétion-Ville, HT 6120, Haïti">
         <input type="text" id="clientPhone" value="+509 9876 5432">
@@ -445,12 +481,12 @@
 
     <div class="total-summary">
         <div><span data-lang="currency-symbol-label">Symbole de la devise :</span> <input type="text" class="currency-input" id="currencySymbolInput" value="$"></div>
-        <div><span data-lang="subtotal">Sous-total :</span> <span id="subtotal">0.00</span> <span class="currencySymbol"></span></div>
+        <div><span id="subtotalLabel" data-lang="subtotal">Sous-total :</span> <span id="subtotal">0.00</span> <span class="currencySymbol"></span></div>
         <div><span data-lang="global-tax-rate">Taux de taxe global (%) :</span> <input type="number" id="globalTaxRate" value="0" min="0" step="0.01" style="width: 100px; text-align: center;"></div>
-        <div><span data-lang="total-tax">Taxe Totale :</span> <span id="totalTax">0.00</span> <span class="currencySymbol"></span></div>
-        <div class="total"><span data-lang="grand-total">Montant total :</span> <span id="grandTotal">0.00</span> <span class="currencySymbol"></span></div>
-        <div><span data-lang="amount-received">Montant reçu :</span> <input type="number" id="amountReceived" value="0" min="0" step="0.01" style="width: 100px; text-align: center;"> <span class="currencySymbol"></span></div>
-        <div class="total"><span data-lang="balance-due">Reste à payer :</span> <span id="totalDue">0.00</span> <span class="currencySymbol"></span></div>
+        <div><span id="totalTaxLabel" data-lang="total-tax">Taxe Totale :</span> <span id="totalTax">0.00</span> <span class="currencySymbol"></span></div>
+        <div class="total"><span id="grandTotalLabel" data-lang="grand-total">Montant total :</span> <span id="grandTotal">0.00</span> <span class="currencySymbol"></span></div>
+        <div><span id="amountReceivedLabel" data-lang="amount-received">Montant reçu :</span> <input type="number" id="amountReceived" value="0" min="0" step="0.01" style="width: 100px; text-align: center;"> <span class="currencySymbol"></span></div>
+        <div class="total"><span id="balanceDueLabel" data-lang="balance-due">Reste à payer :</span> <span id="totalDue">0.00</span> <span class="currencySymbol"></span></div>
     </div>
 
     <div class="payment-terms">
@@ -465,8 +501,23 @@ Méthodes de paiement acceptées :
     </div>
 
     <div class="footer">
-        <p data-lang="footer-text">Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la construction de vos rêves.</p>
+        <textarea id="footerTextarea" rows="2" data-lang="footer-text">
+Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la construction de vos rêves.</textarea>
+        <!-- Nouveau menu déroulant pour la traduction -->
+        <select id="language-select" class="language-select-footer">
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+            <option value="ht">Kreyòl Ayisyen</option>
+            <option value="es">Español</option>
+        </select>
     </div>
+</div>
+
+<!-- Boutons d'action déplacés et redimensionnés -->
+<div class="actions">
+    <button onclick="saveInvoice()">Sauvegarder la facture</button>
+    <button onclick="generateNewInvoice()">Générer une nouvelle facture</button>
+    <button onclick="window.print()">Imprimer la facture</button>
 </div>
 
 <script>
@@ -529,8 +580,8 @@ Méthodes de paiement acceptées :
             'currency-symbol-label': 'Symbole de la devise :',
             'subtotal': 'Sous-total :',
             'global-tax-rate': 'Taux de taxe global (%) :',
-            'total-tax': 'Taxe Totale :',
-            'grand-total': 'Montant total :',
+            'total-tax': 'Taxe Totale : ',
+            'grand-total': 'Montant total : ',
             'amount-received': 'Montant reçu :',
             'balance-due': 'Reste à payer :',
             'payment-terms-title': 'Conditions de paiement',
@@ -546,7 +597,7 @@ Méthodes de paiement acceptées :
                 { desc: 'Frais de participation annuelle (après 6 mois)', qty: 1, price: 500.00 }
             ],
             'client-name': 'Nom du Client',
-            'client-company': 'Nom de l\'Entreprise du Client',
+            'client-company': 'Nomdel\'EntrepriseduClient',
         },
         'ht': {
             'title': 'Fakti - DREAM2BUILT1',
@@ -625,9 +676,25 @@ Méthodes de paiement acceptées :
             'client-company': 'Client Company Name',
         }
     };
-
+    
     let currentLanguage = 'fr'; // Langue par défaut
     
+    // Fonction pour ajuster la hauteur de la zone de texte
+    function adjustTextareaHeight(textarea) {
+        // Remise à zéro de la hauteur pour obtenir la hauteur de défilement correcte
+        textarea.style.height = 'auto';
+        // Définition de la hauteur de la zone de texte en fonction de son contenu
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    // Fonction pour mettre à jour les symboles de la devise
+    function updateCurrencySymbol() {
+        const currencySymbol = document.getElementById('currencySymbolInput').value;
+        document.querySelectorAll('.currencySymbol').forEach(element => {
+            element.textContent = currencySymbol;
+        });
+    }
+
     // Fonction pour mettre à jour la langue de l'interface
     function setLanguage(lang) {
         currentLanguage = lang;
@@ -635,20 +702,31 @@ Méthodes de paiement acceptées :
 
         // Mettre à jour le titre de la page
         document.title = translation.title;
+        
+        // Mettre à jour le sélecteur de langue pour qu'il reflète le changement
+        document.getElementById('language-select').value = lang;
 
         // Mettre à jour les textes des boutons principaux
-        document.querySelector('.actions button:nth-child(1)').textContent = translation['save-button'];
-        document.querySelector('.actions button:nth-child(2)').textContent = translation['generate-button'];
-        document.querySelector('.actions button:nth-child(3)').textContent = translation['print-button'];
+        const actionButtons = document.querySelectorAll('.actions button');
+        if (actionButtons.length >= 3) {
+            actionButtons[0].textContent = translation['save-button'];
+            actionButtons[1].textContent = translation['generate-button'];
+            actionButtons[2].textContent = translation['print-button'];
+        }
 
         // Mettre à jour les textes des éléments avec l'attribut data-lang
         document.querySelectorAll('[data-lang]').forEach(element => {
             const key = element.getAttribute('data-lang');
             if (translation[key]) {
-                element.textContent = translation[key];
+                // Pour le textarea du footer, on met à jour la valeur
+                if (element.tagName === 'TEXTAREA') {
+                    element.value = translation[key];
+                } else {
+                    element.textContent = translation[key];
+                }
             }
         });
-
+        
         // Mettre à jour les valeurs par défaut des inputs (client info)
         document.getElementById('clientName').value = translation['client-name'];
         document.getElementById('clientCompany').value = translation['client-company'];
@@ -672,20 +750,12 @@ Méthodes de paiement acceptées :
 
         // Mettre à jour le contenu de la zone de texte des méthodes de paiement
         document.getElementById('paymentMethods').value = translation['payment-methods'].trim();
-
+        
         // Mettre à jour le texte du footer
-        document.querySelector('.footer p').textContent = translation['footer-text'];
+        document.getElementById('footerTextarea').value = translation['footer-text'].trim();
         
         // Mettre à jour le symbole de la devise affiché
         updateCurrencySymbol();
-    }
-
-    // Fonction pour mettre à jour le symbole de la devise sur l'interface
-    function updateCurrencySymbol() {
-        const currencySymbol = document.getElementById('currencySymbolInput').value;
-        document.querySelectorAll('.currencySymbol').forEach(span => {
-            span.textContent = currencySymbol;
-        });
     }
 
     // Gérer le changement de logo
@@ -721,11 +791,18 @@ Méthodes de paiement acceptées :
         actionElements.forEach(el => el.parentNode.removeChild(el));
 
         // Rendre les champs de saisie en texte statique
-        const inputs = invoiceCopy.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], textarea');
+        const inputs = invoiceCopy.querySelectorAll('input[type="text"], input[type="date"], input[type="number"]');
         inputs.forEach(input => {
             const span = invoiceCopy.createElement('span');
             span.textContent = input.value;
             input.parentNode.replaceChild(span, input);
+        });
+
+        const textareas = invoiceCopy.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            const pre = invoiceCopy.createElement('pre');
+            pre.textContent = textarea.value;
+            textarea.parentNode.replaceChild(pre, textarea);
         });
         
         // Crée le contenu HTML de la facture sauvegardée
@@ -768,7 +845,7 @@ Méthodes de paiement acceptées :
         const removeButtonText = currentLanguage === 'fr' ? 'Supprimer' : currentLanguage === 'ht' ? 'Retire' : currentLanguage === 'es' ? 'Eliminar' : 'Remove';
 
         newRow.innerHTML = `
-            <td><input type="text" value="${description}"></td>
+            <td><textarea class="description-textarea" rows="1">${description}</textarea></td>
             <td><input type="number" class="quantity" value="${quantity}" min="0"></td>
             <td><input type="number" class="price" value="${price}" min="0" step="0.01"></td>
             <td><button class="remove-row-btn" onclick="removeRow(this)">${removeButtonText}</button></td>
@@ -781,7 +858,11 @@ Méthodes de paiement acceptées :
         inputs.forEach(input => {
             input.addEventListener('input', calculateTotals);
         });
-
+        
+        // Ajout d'un écouteur d'événement au textarea pour l'agrandissement dynamique
+        const textarea = newRow.querySelector('.description-textarea');
+        textarea.addEventListener('input', () => adjustTextareaHeight(textarea));
+        
         // Mise à jour des totaux après l'ajout de la ligne
         calculateTotals();
     }
@@ -918,6 +999,10 @@ Méthodes de paiement acceptées :
     document.getElementById('dueDate').addEventListener('change', updateDueDateText);
     // Ajout d'un écouteur d'événement pour mettre à jour le symbole de la devise
     document.getElementById('currencySymbolInput').addEventListener('input', updateCurrencySymbol);
+    // Ajout d'un écouteur d'événement au menu déroulant de langue
+    document.getElementById('language-select').addEventListener('change', (event) => {
+        setLanguage(event.target.value);
+    });
 </script>
 
 </body>
