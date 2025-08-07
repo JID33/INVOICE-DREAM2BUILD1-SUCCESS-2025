@@ -41,7 +41,7 @@
         }
         .header .logo-container {
             flex: 1;
-            min-width: 150px;
+            min-width: 200px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -50,7 +50,7 @@
             cursor: pointer;
             position: relative;
             display: block;
-            width: 150px;
+            width: 200px;
             height: auto;
             border: 2px dashed #ccc;
             border-radius: 8px;
@@ -107,6 +107,34 @@
             font-size: 14px;
             color: #7f8c8d;
         }
+        .company-info .editable-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin: 2px 0;
+            border: none;
+        }
+        .company-info .editable-text input {
+            text-align: right;
+            border: 1px solid #ccc;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: inherit;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+        .company-info .editable-text .print-text {
+            display: none;
+        }
+        #companyNameInput {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
         .invoice-details, .client-info, .payment-terms {
             margin-bottom: 15px;
             line-height: 1.5;
@@ -114,7 +142,7 @@
             padding: 15px;
             border-radius: 8px;
         }
-        .invoice-details div, .client-info div {
+        .invoice-details div, .client-info .client-field {
             margin-bottom: 4px;
         }
         .invoice-details span, .client-info span {
@@ -131,20 +159,6 @@
             font-family: inherit;
             width: 100%;
             box-sizing: border-box;
-        }
-        .company-info input[type="text"] {
-            text-align: right;
-            margin: 2px 0;
-        }
-        #companyName {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2c3e50;
-            background-color: transparent;
-            border: none;
-            text-align: right;
-            width: auto;
-            padding: 0;
         }
         .payment-terms input[type="text"] {
             border: 1px solid #ccc;
@@ -370,12 +384,59 @@
                 size: 8.5in 11in;
                 margin: 0.5in;
             }
-            .actions, .table-actions, .remove-logo-btn, .language-select-footer {
+            .actions,
+            .table-actions,
+            .remove-row-btn,
+            .language-select-footer,
+            .upload-text,
+            #removeLogoButton {
+                display: none !important;
+            }
+            /* AFFICHER LE TEXTE BRUT ET CACHER LES INPUTS */
+            .editable-text input {
                 display: none;
+            }
+            .editable-text .print-text {
+                display: block !important;
+                margin: 2px 0;
+            }
+            /* AJOUTER DES BORDURES ET STYLES COMME SUR L'IMAGE DE RÉFÉRENCE */
+            .company-info .editable-text {
+                display: inline-block;
+                border: 1px solid #333;
+                border-radius: 4px;
+                padding: 2px 5px;
+                margin: 2px;
+                font-size: 14px;
+                line-height: 1.2;
+            }
+            .company-info .editable-text:last-child {
+                margin-bottom: 0;
+            }
+            .header .company-info {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                align-items: flex-end;
+                gap: 5px; /* Espace entre les champs */
+                text-align: right;
+            }
+            /* RETIRER LE TITRE DE LA COMPAGNIE EN H1 */
+            #companyNameInput {
+                display: none !important;
+            }
+            #companyNameDisplay {
+                font-size: 20px;
+                font-weight: bold;
+                color: #2c3e50;
+                display: block !important;
+                width: 100%;
+                text-align: right;
             }
             input, textarea {
                 border: none;
                 padding: 0;
+                background-color: transparent;
             }
             body {
                 padding: 0;
@@ -398,9 +459,16 @@
             .total-summary input[type="number"] {
                 width: 100px !important;
             }
-            /* Correction: S'assurer que le logo est toujours visible lors de l'impression */
             .logo-upload {
                 display: block !important;
+                border: none;
+            }
+            .client-info h3 {
+                margin-bottom: 5px;
+            }
+            .logo-container img {
+                max-width: 100%;
+                height: auto;
             }
         }
     </style>
@@ -419,13 +487,35 @@
             <button id="removeLogoButton" class="remove-logo-btn" onclick="removeLogo()">Supprimer le logo</button>
         </div>
         <div class="company-info">
-            <input type="text" id="companyName" value="DREAM2BUILT1">
-            <input type="text" id="companySlogan" value="Slogan: Invest to Win More">
-            <input type="text" id="companyAddress" value="123 Rue de l'Innovation">
-            <input type="text" id="companyCity" value="Port-au-Prince, HT 6110, Haïti">
-            <input type="text" id="companyPhone" value="+509 1234 5678">
-            <input type="text" id="companyEmail" value="contact@dream2built1.com">
-            <input type="text" id="companyWebsite" value="www.dream2built1.com">
+            <!-- Champs de saisie modifiables pour les informations de l'entreprise -->
+            <div class="editable-text">
+                <input type="text" id="companyNameInput" value="DREAM2BUILT1" style="font-size: 28px; font-weight: bold; color: #2c3e50;">
+                <span class="print-text" id="companyNameDisplay">DREAM2BUILT1</span>
+            </div>
+            <div class="editable-text">
+                <input type="text" id="companySloganInput" value="Slogan: Invest to Win More">
+                <span class="print-text" id="companySloganDisplay">Slogan: Invest to Win More</span>
+            </div>
+            <div class="editable-text">
+                <input type="text" id="companyAddressInput" value="123 Rue de l'Innovation">
+                <span class="print-text" id="companyAddressDisplay">123 Rue de l'Innovation</span>
+            </div>
+            <div class="editable-text">
+                <input type="text" id="companyCityInput" value="Port-au-Prince, HT 6110, Haïti">
+                <span class="print-text" id="companyCityDisplay">Port-au-Prince, HT 6110, Haïti</span>
+            </div>
+            <div class="editable-text">
+                <input type="text" id="companyPhoneInput" value="+509 1234 5678">
+                <span class="print-text" id="companyPhoneDisplay">+509 1234 5678</span>
+            </div>
+            <div class="editable-text">
+                <input type="text" id="companyEmailInput" value="contact@dream2built1.com">
+                <span class="print-text" id="companyEmailDisplay">contact@dream2built1.com</span>
+            </div>
+            <div class="editable-text">
+                <input type="text" id="companyWebsiteInput" value="www.dream2built1.com">
+                <span class="print-text" id="companyWebsiteDisplay">www.dream2built1.com</span>
+            </div>
         </div>
     </div>
 
@@ -439,19 +529,19 @@
             <input type="date" id="invoiceDate" value="2025-08-06">
         </div>
         <div>
-            <span data-lang="due-date">Date d'échéance :</span>
+            <span data-lang="due-date">Date d'echeance :</span>
             <input type="date" id="dueDate" value="2025-08-20">
         </div>
     </div>
 
     <div class="client-info">
         <h3 data-lang="bill-to">Facture à :</h3>
-        <input type="text" id="clientName" value="Nom du Client">
-        <input type="text" id="clientCompany" value="Nomdel'EntrepriseduClient">
-        <input type="text" id="clientAddress" value="123 Avenue du Progrès">
-        <input type="text" id="clientCity" value="Pétion-Ville, HT 6120, Haïti">
-        <input type="text" id="clientPhone" value="+509 9876 5432">
-        <input type="text" id="clientEmail" value="client@email.com">
+        <div class="client-field"><input type="text" id="clientName" value="Nom du Client"></div>
+        <div class="client-field"><input type="text" id="clientCompany" value="Nomdel'EntrepriseduClient"></div>
+        <div class="client-field"><input type="text" id="clientAddress" value="123 Avenue du Progrès"></div>
+        <div class="client-field"><input type="text" id="clientCity" value="Pétion-Ville, HT 6120, Haïti"></div>
+        <div class="client-field"><input type="text" id="clientPhone" value="+509 9876 5432"></div>
+        <div class="client-field"><input type="text" id="clientEmail" value="client@email.com"></div>
     </div>
 
     <div class="table-container">
@@ -511,7 +601,7 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
 <div class="actions">
     <button onclick="saveInvoice()">Sauvegarder la facture</button>
     <button onclick="generateNewInvoice()">Générer une nouvelle facture</button>
-    <button onclick="window.print()">Imprimer la facture</button>
+    <button onclick="printInvoice()">Imprimer la facture</button>
 </div>
 
 <script>
@@ -564,7 +654,7 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
             'remove-logo-button': 'Supprimer le logo',
             'invoice-number': 'FACTURE N° :',
             'invoice-date': 'Date de facturation :',
-            'due-date': 'Date d\'échéance :',
+            'due-date': 'Date d\'echeance :',
             'bill-to': 'Facture à :',
             'description': 'Description',
             'quantity': 'Quantité',
@@ -657,7 +747,7 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
             'payment-terms-title': 'Condiciones de pago',
             'payment-due-date-text': 'Por favor, realice el pago a más tardar el',
             'payment-methods': `Métodos de pago aceptados:
-- Transferencia bancaria (Cuenta #1234567890, Banco Nacional de Crédito)
+- Transfèrecia bancaria (Cuenta #1234567890, Banco Nacional de Crédito)
 - Pago móvil (Moncash: +509 1234 5678, Natcash: +509 9876 5432)`,
             'footer-text': '¡Gracias por su confianza! Esperamos poder ayudarle a construir sus sueños.',
             'default-items': [
@@ -675,9 +765,7 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
     
     // Fonction pour ajuster la hauteur de la zone de texte
     function adjustTextareaHeight(textarea) {
-        // Remise à zéro de la hauteur pour obtenir la hauteur de défilement correcte
         textarea.style.height = 'auto';
-        // Définition de la hauteur de la zone de texte en fonction de son contenu
         textarea.style.height = textarea.scrollHeight + 'px';
     }
 
@@ -689,6 +777,17 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         });
     }
 
+    // Fonction pour mettre à jour les champs d'information de l'entreprise affichés
+    function updateCompanyInfoDisplays() {
+        document.getElementById('companyNameDisplay').textContent = document.getElementById('companyNameInput').value;
+        document.getElementById('companySloganDisplay').textContent = document.getElementById('companySloganInput').value;
+        document.getElementById('companyAddressDisplay').textContent = document.getElementById('companyAddressInput').value;
+        document.getElementById('companyCityDisplay').textContent = document.getElementById('companyCityInput').value;
+        document.getElementById('companyPhoneDisplay').textContent = document.getElementById('companyPhoneInput').value;
+        document.getElementById('companyEmailDisplay').textContent = document.getElementById('companyEmailInput').value;
+        document.getElementById('companyWebsiteDisplay').textContent = document.getElementById('companyWebsiteInput').value;
+    }
+    
     // Fonction pour mettre à jour la langue de l'interface
     function setLanguage(lang) {
         currentLanguage = lang;
@@ -712,7 +811,6 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         document.querySelectorAll('[data-lang]').forEach(element => {
             const key = element.getAttribute('data-lang');
             if (translation[key]) {
-                // Pour le textarea du footer, on met à jour la valeur
                 if (element.tagName === 'TEXTAREA') {
                     element.value = translation[key];
                 } else {
@@ -722,8 +820,8 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         });
         
         // Mettre à jour les valeurs par défaut des inputs (client info)
-        document.getElementById('clientName').value = translation['client-name'];
-        document.getElementById('clientCompany').value = translation['client-company'];
+        document.getElementById('clientName').value = document.getElementById('clientName').value || translation['client-name'];
+        document.getElementById('clientCompany').value = document.getElementById('clientCompany').value || translation['client-company'];
 
         // Mettre à jour le placeholder du logo
         const uploadTextElement = document.querySelector('.logo-upload .upload-text');
@@ -735,7 +833,6 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
             removeLogoBtn.textContent = translation['remove-logo-button'];
         }
         
-
         // Mettre à jour les titres de la table
         const tableHeaders = document.querySelectorAll('thead th');
         if (tableHeaders.length >= 4) {
@@ -789,30 +886,31 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         document.getElementById('logoImage').src = '';
         document.getElementById('removeLogoButton').style.display = 'none';
         document.querySelector('.logo-upload').classList.add('empty');
-        // Réinitialiser l'input file pour pouvoir re-sélectionner le même fichier
         document.getElementById('logoInput').value = '';
     }
 
     // Fonction pour sauvegarder la facture en tant que fichier HTML
     function saveInvoice() {
-        // Crée une copie du document actuel pour le nettoyage
+        // Mettre à jour les affichages de l'en-tête avant de sauvegarder
+        updateCompanyInfoDisplays();
+
         const invoiceCopy = document.documentElement.cloneNode(true);
         
-        // CORRECTION: Ne pas supprimer l'élément du logo
-        const actionElements = invoiceCopy.querySelectorAll('.actions, .table-actions, .remove-row-btn, .language-select-footer');
-        actionElements.forEach(el => {
+        // Suppression des éléments d'interface utilisateur
+        const elementsToRemove = invoiceCopy.querySelectorAll('.actions, .table-actions, .remove-row-btn, .language-select-footer, .upload-text, #removeLogoButton');
+        elementsToRemove.forEach(el => {
             if (el.parentNode) {
                 el.parentNode.removeChild(el);
             }
         });
-
-        // Rendre les champs de saisie en texte statique
+        
+        // Remplacement des inputs par des spans pour le texte
         const inputs = invoiceCopy.querySelectorAll('input[type="text"], input[type="date"], input[type="number"]');
         inputs.forEach(input => {
-            // CORRECTION: Utiliser document.createElement, pas invoiceCopy.createElement
             const span = document.createElement('span');
             span.textContent = input.value;
-            input.parentNode.replaceChild(span, input);
+            input.parentNode.insertBefore(span, input);
+            input.parentNode.removeChild(input);
         });
 
         const textareas = invoiceCopy.querySelectorAll('textarea');
@@ -822,11 +920,45 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
             textarea.parentNode.replaceChild(pre, textarea);
         });
 
-        // Crée le contenu HTML de la facture sauvegardée
+        // Suppression des champs d'entrée d'en-tête et affichage des champs imprimés
+        const editableTexts = invoiceCopy.querySelectorAll('.company-info .editable-text');
+        editableTexts.forEach(et => {
+            const input = et.querySelector('input');
+            const printText = et.querySelector('.print-text');
+            if (input && printText) {
+                // Mettre à jour le texte imprimable avec la valeur de l'input
+                printText.textContent = input.value;
+                input.parentNode.removeChild(input);
+                printText.style.display = 'block';
+                // Modifier le style pour qu'il corresponde au style d'impression
+                et.style.display = 'inline-block';
+                et.style.border = '1px solid #333';
+                et.style.borderRadius = '4px';
+                et.style.padding = '2px 5px';
+                et.style.margin = '2px';
+                et.style.fontSize = '14px';
+                et.style.lineHeight = '1.2';
+            }
+        });
+
+        // Masquer le titre principal de l'entreprise si nécessaire
+        const companyNameInput = invoiceCopy.querySelector('#companyNameInput');
+        if (companyNameInput) {
+            companyNameInput.parentNode.removeChild(companyNameInput);
+        }
+        const companyNameDisplay = invoiceCopy.querySelector('#companyNameDisplay');
+        if (companyNameDisplay) {
+            companyNameDisplay.style.display = 'block';
+            companyNameDisplay.style.fontSize = '20px';
+            companyNameDisplay.style.fontWeight = 'bold';
+            companyNameDisplay.style.color = '#2c3e50';
+            companyNameDisplay.style.width = '100%';
+            companyNameDisplay.style.textAlign = 'right';
+        }
+
         const htmlContent = `<!DOCTYPE html>${invoiceCopy.outerHTML}`;
         const blob = new Blob([htmlContent], { type: 'text/html' });
 
-        // Crée un lien de téléchargement et le déclenche
         const a = document.createElement('a');
         const url = URL.createObjectURL(blob);
         const invoiceNumber = document.getElementById('invoiceNumber').value;
@@ -837,6 +969,14 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
+    
+    // Fonction pour imprimer la facture, en s'assurant que les données sont à jour
+    function printInvoice() {
+        // IMPORTANT: S'assurer que les textes imprimables sont à jour avant d'imprimer
+        updateCompanyInfoDisplays();
+        window.print();
+    }
+
 
     // Fonction pour obtenir la date actuelle au format YYYY-MM-DD
     function getCurrentDate() {
@@ -870,17 +1010,14 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
 
         tableBody.appendChild(newRow);
 
-        // Ajout des écouteurs d'événements aux nouvelles entrées
         const inputs = newRow.querySelectorAll('input[type="number"]');
         inputs.forEach(input => {
             input.addEventListener('input', calculateTotals);
         });
         
-        // Ajout d'un écouteur d'événement au textarea pour l'agrandissement dynamique
         const textarea = newRow.querySelector('.description-textarea');
         textarea.addEventListener('input', () => adjustTextareaHeight(textarea));
         
-        // Mise à jour des totaux après l'ajout de la ligne
         calculateTotals();
     }
 
@@ -916,7 +1053,6 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
         document.getElementById('totalDue').textContent = remainingDue.toFixed(2);
 
-        // Si le montant dû est 0 ou moins, on peut le mettre en évidence
         if (remainingDue <= 0) {
             document.getElementById('totalDue').style.color = '#27ae60'; // Green
         } else {
@@ -934,7 +1070,7 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
             dynamicDueDateTextInput.value = formattedDate;
         }
     }
-
+    
     // Fonction pour générer une nouvelle facture (bouton "Générer")
     function generateNewInvoice() {
         const invoiceNumberInput = document.getElementById('invoiceNumber');
@@ -945,14 +1081,10 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
 
         const translation = translations[currentLanguage];
 
-        // Mettre à jour le numéro de facture
         invoiceNumberInput.value = generateInvoiceNumber();
-
-        // Mettre à jour la date de facturation à la date du jour
         const currentDate = getCurrentDate();
         invoiceDateInput.value = currentDate;
         
-        // Mettre à jour la date d'échéance à 14 jours de la date du jour
         const dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + 14);
         const dueYear = dueDate.getFullYear();
@@ -961,51 +1093,46 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         dueDateInput.value = `${dueYear}-${dueMonth}-${dueDay}`;
         updateDueDateText();
 
-        // Réinitialiser le tableau
         tableBody.innerHTML = '';
         
-        // Ajouter les lignes initiales avec les valeurs par défaut de la langue
         translation['default-items'].forEach(item => {
             addRow(item.desc, item.qty, item.price);
         });
 
-        // Réinitialiser le montant reçu
         document.getElementById('amountReceived').value = 0;
-        
-        // Réinitialiser le symbole de la devise
         document.getElementById('currencySymbolInput').value = '$';
         updateCurrencySymbol();
-        
-        // Réinitialiser le taux de taxe global
         document.getElementById('globalTaxRate').value = '0';
-
-        // Réinitialiser le contenu du champ de texte
         paymentMethodsTextarea.value = translation['payment-methods'].trim();
         
         // Réinitialiser les champs de l'entreprise
-        document.getElementById('companyName').value = 'DREAM2BUILT1';
-        document.getElementById('companySlogan').value = 'Slogan: Invest to Win More';
-        document.getElementById('companyAddress').value = '123 Rue de l\'Innovation';
-        document.getElementById('companyCity').value = 'Port-au-Prince, HT 6110, Haïti';
-        document.getElementById('companyPhone').value = '+509 1234 5678';
-        document.getElementById('companyEmail').value = 'contact@dream2built1.com';
-        document.getElementById('companyWebsite').value = 'www.dream2built1.com';
+        document.getElementById('companyNameInput').value = 'DREAM2BUILT1';
+        document.getElementById('companySloganInput').value = 'Slogan: Invest to Win More';
+        document.getElementById('companyAddressInput').value = '123 Rue de l\'Innovation';
+        document.getElementById('companyCityInput').value = 'Port-au-Prince, HT 6110, Haïti';
+        document.getElementById('companyPhoneInput').value = '+509 1234 5678';
+        document.getElementById('companyEmailInput').value = 'contact@dream2built1.com';
+        document.getElementById('companyWebsiteInput').value = 'www.dream2built1.com';
+        updateCompanyInfoDisplays(); // Mettre à jour les affichages
         
         // Réinitialiser les champs du client
         document.getElementById('clientName').value = translation['client-name'];
         document.getElementById('clientCompany').value = translation['client-company'];
 
-        // Réinitialiser le logo à la valeur par défaut
         removeLogo();
-
-        // Calculer les totaux initiaux
         calculateTotals();
     }
 
     // Appel de la fonction pour générer une nouvelle facture au chargement de la page
     document.addEventListener('DOMContentLoaded', () => {
-        setLanguage('fr'); // Définir la langue par défaut sur le français
+        setLanguage('fr');
         generateNewInvoice();
+        
+        // Ajout des écouteurs d'événements pour les champs d'information de l'entreprise
+        const companyInfoInputs = document.querySelectorAll('.company-info input');
+        companyInfoInputs.forEach(input => {
+            input.addEventListener('input', updateCompanyInfoDisplays);
+        });
     });
 
     // Ajout d'un écouteur d'événement au champ "Montant reçu" pour recalculer les totaux
