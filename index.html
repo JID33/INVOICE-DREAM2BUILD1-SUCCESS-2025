@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facture - DREAM2BUILT1</title>
+    <!-- Inclure la police Inter depuis Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Styles CSS pour la mise en page de la facture -->
     <style>
         body {
@@ -33,7 +37,7 @@
             align-items: center;
             border-bottom: 2px solid #2c3e50;
             padding-bottom: 20px;
-            margin-bottom: 15px; /* Espace réduit */
+            margin-bottom: 15px;
         }
         .header .logo-container {
             flex: 1;
@@ -42,7 +46,6 @@
             flex-direction: column;
             align-items: flex-start;
         }
-        /* Style pour la zone de téléchargement de logo */
         .logo-upload {
             cursor: pointer;
             position: relative;
@@ -65,7 +68,7 @@
             border-radius: 8px;
             transition: opacity 0.3s ease;
         }
-        .logo-upload .upload-text {
+        .logo-upload.empty .upload-text {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -73,9 +76,6 @@
             color: #888;
             font-size: 14px;
             z-index: 1;
-            display: none;
-        }
-        .logo-upload.empty .upload-text {
             display: block;
         }
         .logo-upload.empty img {
@@ -90,7 +90,7 @@
             cursor: pointer;
             font-size: 0.8em;
             margin-top: 5px;
-            display: none; /* Masqué par défaut */
+            display: none;
         }
         .header .company-info {
             flex: 2;
@@ -107,22 +107,20 @@
             font-size: 14px;
             color: #7f8c8d;
         }
-        /* Style pour les champs de saisie */
         .invoice-details, .client-info, .payment-terms {
-            margin-bottom: 15px; /* Espace réduit */
-            line-height: 1.5; /* Espace de ligne réduit */
+            margin-bottom: 15px;
+            line-height: 1.5;
             background-color: #ecf0f1;
             padding: 15px;
             border-radius: 8px;
         }
         .invoice-details div, .client-info div {
-            margin-bottom: 4px; /* Espace réduit */
+            margin-bottom: 4px;
         }
         .invoice-details span, .client-info span {
             font-weight: bold;
             color: #34495e;
         }
-        /* Style pour les champs de saisie */
         .invoice-details input[type="text"],
         .invoice-details input[type="date"],
         .client-info input[type="text"],
@@ -158,7 +156,7 @@
             margin-top: 5px;
         }
         .table-container {
-            margin-top: 20px; /* Espace réduit */
+            margin-top: 20px;
             overflow-x: auto;
         }
         table {
@@ -169,7 +167,7 @@
             overflow: hidden;
         }
         th, td {
-            padding: 10px; /* Espace réduit */
+            padding: 10px;
             border-bottom: 1px solid #e0e0e0;
         }
         thead th {
@@ -203,12 +201,12 @@
         }
         .total-summary {
             text-align: right;
-            margin-top: 15px; /* Espace réduit */
+            margin-top: 15px;
             padding-top: 15px;
             border-top: 2px solid #34495e;
         }
         .total-summary div {
-            padding: 5px 0; /* Espace réduit */
+            padding: 5px 0;
             font-size: 1.1em;
         }
         .total-summary .total {
@@ -216,19 +214,19 @@
             font-weight: bold;
             color: #2c3e50;
             padding-top: 15px;
-            margin-top: 10px; /* Espace réduit */
+            margin-top: 10px;
         }
         .payment-terms {
-            margin-top: 20px; /* Espace réduit */
+            margin-top: 20px;
             border-top: 1px solid #ddd;
-            padding-top: 15px; /* Espace réduit */
+            padding-top: 15px;
             background-color: #ecf0f1;
             padding: 20px;
             border-radius: 8px;
         }
         .payment-terms h3 {
             color: #34495e;
-            margin-bottom: 10px; /* Espace réduit */
+            margin-bottom: 10px;
             font-size: 18px;
         }
         .payment-terms p {
@@ -243,16 +241,15 @@
             color: #555;
         }
         .footer {
-            margin-top: 20px; /* Espace réduit */
+            margin-top: 20px;
             text-align: center;
             color: #7f8c8d;
             font-size: 14px;
-            display: flex; /* Utiliser flexbox */
-            flex-direction: column; /* Organiser en colonne */
-            align-items: center; /* Centrer horizontalement */
-            position: relative; /* Pour positionner le menu déroulant */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
         }
-        /* Style pour le nouveau textarea du footer */
         #footerTextarea {
             width: 100%;
             border: 1px solid #ccc;
@@ -263,23 +260,22 @@
             font-size: 14px;
             text-align: center;
         }
-        /* Styles pour les petits boutons d'action au pied de page */
         .actions {
-            position: fixed; /* Position fixe par rapport à la fenêtre */
-            bottom: 20px;    /* 20px du bas */
-            right: 20px;     /* 20px de la droite */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             display: flex;
-            gap: 10px;       /* Espacement entre les boutons */
-            z-index: 1000;   /* S'assurer que les boutons sont au-dessus des autres éléments */
+            gap: 10px;
+            z-index: 1000;
         }
         .actions button {
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 8px 12px; /* Rendre le padding plus petit */
+            padding: 8px 12px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.8em; /* Rendre la police plus petite */
+            font-size: 0.8em;
             transition: background-color 0.3s ease;
         }
         .actions button:hover {
@@ -302,11 +298,10 @@
         .total-amount-row {
             text-align: right;
         }
-        /* Style pour le menu déroulant de langue */
         .language-select-footer {
-            position: absolute; /* Positionnement absolu dans le footer */
-            bottom: 0; /* Aligné au bas du footer */
-            right: 0; /* Aligné à droite du footer */
+            position: absolute;
+            bottom: 0;
+            right: 0;
             padding: 2px;
             font-size: 12px;
             border-radius: 4px;
@@ -314,8 +309,6 @@
             border: 1px solid #ccc;
             cursor: pointer;
         }
-
-        /* NOUVEAUX STYLES POUR LE TEXTAREA DYNAMIQUE */
         .description-textarea {
             width: 100%;
             border: 1px solid #ccc;
@@ -323,11 +316,10 @@
             border-radius: 4px;
             font-family: inherit;
             box-sizing: border-box;
-            resize: none; /* Empêche le redimensionnement manuel par l'utilisateur */
-            overflow: hidden; /* Cache la barre de défilement */
-            min-height: 40px; /* Hauteur minimale d'un input normal */
+            resize: none;
+            overflow: hidden;
+            min-height: 40px;
         }
-
         /* Styles responsifs pour les petits écrans */
         @media (max-width: 600px) {
             .invoice-container {
@@ -366,21 +358,19 @@
                 padding: 6px 10px;
             }
             .language-select-footer {
-                position: static; /* Positionnement statique sur mobile */
-                margin-top: 10px; /* Ajouter une marge pour l'espacement */
-                width: 100%; /* Occupe toute la largeur */
+                position: static;
+                margin-top: 10px;
+                width: 100%;
                 text-align: center;
             }
         }
         /* Masquer les boutons lors de l'impression et ajuster les marges pour économiser de l'espace */
         @media print {
-            /* Définit la taille de la page à 8.5 x 11 pouces (US Letter) */
             @page {
                 size: 8.5in 11in;
                 margin: 0.5in;
             }
-            /* C'est ici que l'élément est masqué */
-            .actions, .table-actions, .logo-upload, .remove-logo-btn, .language-select-footer {
+            .actions, .table-actions, .remove-logo-btn, .language-select-footer {
                 display: none;
             }
             input, textarea {
@@ -400,13 +390,17 @@
                 padding: 0;
             }
             .header, .invoice-details, .client-info, .payment-terms, .total-summary, .footer {
-                margin-bottom: 10px; /* Réduire l'espacement vertical */
+                margin-bottom: 10px;
             }
             th, td {
-                padding: 8px; /* Réduire le padding des cellules de tableau */
+                padding: 8px;
             }
             .total-summary input[type="number"] {
                 width: 100px !important;
+            }
+            /* Correction: S'assurer que le logo est toujours visible lors de l'impression */
+            .logo-upload {
+                display: block !important;
             }
         }
     </style>
@@ -732,27 +726,45 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
         document.getElementById('clientCompany').value = translation['client-company'];
 
         // Mettre à jour le placeholder du logo
-        document.querySelector('.logo-upload .upload-text').textContent = translation['logo-upload-text'];
-        document.getElementById('removeLogoButton').textContent = translation['remove-logo-button'];
+        const uploadTextElement = document.querySelector('.logo-upload .upload-text');
+        if (uploadTextElement) {
+            uploadTextElement.textContent = translation['logo-upload-text'];
+        }
+        const removeLogoBtn = document.getElementById('removeLogoButton');
+        if (removeLogoBtn) {
+            removeLogoBtn.textContent = translation['remove-logo-button'];
+        }
+        
 
         // Mettre à jour les titres de la table
         const tableHeaders = document.querySelectorAll('thead th');
-        tableHeaders[0].textContent = translation['description'];
-        tableHeaders[1].textContent = translation['quantity'];
-        tableHeaders[2].textContent = translation['unit-price'];
-        tableHeaders[3].textContent = translation['actions'];
+        if (tableHeaders.length >= 4) {
+            tableHeaders[0].textContent = translation['description'];
+            tableHeaders[1].textContent = translation['quantity'];
+            tableHeaders[2].textContent = translation['unit-price'];
+            tableHeaders[3].textContent = translation['actions'];
+        }
 
         // Mettre à jour le texte du bouton d'ajout de ligne
-        document.querySelector('.table-actions button').textContent = translation['add-row-button'];
+        const addRowBtn = document.querySelector('.table-actions button');
+        if (addRowBtn) {
+            addRowBtn.textContent = translation['add-row-button'];
+        }
         
         // Mettre à jour le texte du bouton de suppression de ligne pour les lignes existantes
         document.querySelectorAll('.remove-row-btn').forEach(btn => btn.textContent = lang === 'fr' ? 'Supprimer' : lang === 'ht' ? 'Retire' : lang === 'es' ? 'Eliminar' : 'Remove');
 
         // Mettre à jour le contenu de la zone de texte des méthodes de paiement
-        document.getElementById('paymentMethods').value = translation['payment-methods'].trim();
+        const paymentMethods = document.getElementById('paymentMethods');
+        if (paymentMethods) {
+            paymentMethods.value = translation['payment-methods'].trim();
+        }
         
         // Mettre à jour le texte du footer
-        document.getElementById('footerTextarea').value = translation['footer-text'].trim();
+        const footerTextarea = document.getElementById('footerTextarea');
+        if (footerTextarea) {
+            footerTextarea.value = translation['footer-text'].trim();
+        }
         
         // Mettre à jour le symbole de la devise affiché
         updateCurrencySymbol();
@@ -785,26 +797,31 @@ Merci pour votre confiance ! Nous sommes impatients de vous accompagner dans la 
     function saveInvoice() {
         // Crée une copie du document actuel pour le nettoyage
         const invoiceCopy = document.documentElement.cloneNode(true);
-
-        // Supprime les boutons d'action du document copié pour avoir une version propre
-        const actionElements = invoiceCopy.querySelectorAll('.actions, .table-actions, .remove-logo-btn, .logo-upload, .language-buttons');
-        actionElements.forEach(el => el.parentNode.removeChild(el));
+        
+        // CORRECTION: Ne pas supprimer l'élément du logo
+        const actionElements = invoiceCopy.querySelectorAll('.actions, .table-actions, .remove-row-btn, .language-select-footer');
+        actionElements.forEach(el => {
+            if (el.parentNode) {
+                el.parentNode.removeChild(el);
+            }
+        });
 
         // Rendre les champs de saisie en texte statique
         const inputs = invoiceCopy.querySelectorAll('input[type="text"], input[type="date"], input[type="number"]');
         inputs.forEach(input => {
-            const span = invoiceCopy.createElement('span');
+            // CORRECTION: Utiliser document.createElement, pas invoiceCopy.createElement
+            const span = document.createElement('span');
             span.textContent = input.value;
             input.parentNode.replaceChild(span, input);
         });
 
         const textareas = invoiceCopy.querySelectorAll('textarea');
         textareas.forEach(textarea => {
-            const pre = invoiceCopy.createElement('pre');
+            const pre = document.createElement('pre');
             pre.textContent = textarea.value;
             textarea.parentNode.replaceChild(pre, textarea);
         });
-        
+
         // Crée le contenu HTML de la facture sauvegardée
         const htmlContent = `<!DOCTYPE html>${invoiceCopy.outerHTML}`;
         const blob = new Blob([htmlContent], { type: 'text/html' });
